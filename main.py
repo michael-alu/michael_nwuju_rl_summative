@@ -2,23 +2,24 @@
 ThinBook Pension entry point.
 
 Commands available so far:
+0. play (the default with no command): start the browser game with the best trained agent; flags
+   --player, --seed, --market, --speed, --no-browser, --port (same as play.py).
 1. episode: play one game with a baseline (or the perfect-foresight planner) and print every trading day.
 2. baselines: evaluate every baseline and the perfect-foresight planner on held-out seeds.
 3. design-checks: run the structural design checks.
 4. sweep: run the hyperparameter sweep (options are passed to training/sweep.py).
 5. sweep-report: build the report tables from the finished sweep runs.
 
-Run from the project root: uv run main.py episode --policy block_dealer --seed 100000
+Run from the project root: uv run main.py (browser game) or uv run main.py episode --policy block_dealer --seed 100000
 """
 
 import argparse
 import runpy
 import sys
 
-from classes import PerfectForesightPlanner, Policy
-from environment import baselines
+from classes import PerfectForesightPlanner, Policy, ThinBookPensionEnv
+from environment import baselines, rendering
 from environment.custom_env import load_config
-from classes import ThinBookPensionEnv
 from environment.policy_helpers import read_step_info
 from environment.rendering import DAY_HEADER, format_day_line, format_game_summary
 
@@ -66,6 +67,8 @@ def main() -> None:
 
     commands = parser.add_subparsers(dest="command")
 
+    commands.add_parser("play", help="Watch an agent in the browser, e.g. --player random --seed 100042 --speed 20.")
+
     episode_parser = commands.add_parser("episode", help="Play one game with a baseline policy.")
 
     episode_parser.add_argument("--policy", default="block_dealer")
@@ -80,9 +83,19 @@ def main() -> None:
 
     commands.add_parser("sweep-report", help="Build the report tables from the sweep summaries.")
 
+    no_command = len(sys.argv) == 1 or (sys.argv[1].startswith("--") and sys.argv[1] not in ("-h", "--help"))
+
+    if no_command:
+        rendering.play_main(sys.argv[1:])
+
+        return
+
     arguments, extra_options = parser.parse_known_args()
 
-    if arguments.command == "episode":
+    if arguments.command == "play":
+        rendering.play_main(extra_options)
+
+    elif arguments.command == "episode":
         run_episode(arguments.policy, arguments.seed)
 
     elif arguments.command == "baselines":
