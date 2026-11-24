@@ -1,0 +1,25 @@
+{
+  "name": "pension5_seed1",
+  "settings": {
+    "name": "pension5_seed1",
+    "frames": 1200000,
+    "learning_rate": 0.001,
+    "rollout": 2400,
+    "minibatch": 240,
+    "epochs": 4,
+    "entropy": 0.01,
+    "gae_lambda": 0.95,
+    "clip": 0.2,
+    "gamma": 0.995,
+    "value_coefficient": 0.5,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "seed": 1,
+    "threads": 1,
+    "overrides": "configs/actions_simple.yaml"
+  },
+  "frames": 1200000,
+  "seconds": 2123.8,
+  "best_validation_win_rate": 0.415,
+  "best_frames": 722400
+}

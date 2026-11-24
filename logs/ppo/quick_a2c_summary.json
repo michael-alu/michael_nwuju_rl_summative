@@ -1,0 +1,26 @@
+{
+  "name": "quick_a2c",
+  "settings": {
+    "name": "quick_a2c",
+    "algorithm": "a2c",
+    "frames": 400080,
+    "learning_rate": 0.001,
+    "rollout": 240,
+    "minibatch": 240,
+    "epochs": 4,
+    "entropy": 0.01,
+    "gae_lambda": 0.95,
+    "clip": 0.2,
+    "gamma": 0.995,
+    "value_coefficient": 0.5,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "seed": 0,
+    "threads": 1,
+    "overrides": "configs/actions_simple.yaml"
+  },
+  "frames": 400080,
+  "seconds": 958.8,
+  "best_validation_win_rate": 0.015,
+  "best_frames": 355440
+}

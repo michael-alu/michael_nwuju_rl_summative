@@ -1,0 +1,30 @@
+{
+  "name": "quick_dqn",
+  "algorithm": "dqn",
+  "settings": {
+    "name": "quick_dqn",
+    "frames": 400080,
+    "learning_rate": 0.0005,
+    "gamma": 0.995,
+    "batch_size": 128,
+    "buffer_size": 100000,
+    "frames_per_batch": 120,
+    "updates_per_batch": 4,
+    "warmup_frames": 5000,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_frames": 150000,
+    "target_update": "soft",
+    "tau": 0.005,
+    "hard_update_every": 1000,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "seed": 0,
+    "threads": 1,
+    "overrides": "configs/actions_simple.yaml"
+  },
+  "frames": 400080,
+  "seconds": 562.6,
+  "best_validation_win_rate": 0.145,
+  "best_frames": 264000
+}

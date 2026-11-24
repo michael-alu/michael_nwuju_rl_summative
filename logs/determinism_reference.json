@@ -1,0 +1,32 @@
+{
+  "note": "Re-saved 2026-11-23 after the baselines' planning sizes were fixed to the real 5-action slices (banks_slice, small_caps_slice). Only block_dealer changed; the PPO model, random play and the perfect-foresight planner matched the previous reference exactly.",
+  "ppo_model": {
+    "games": 100,
+    "win_rate": 0.44,
+    "mean_points": -17.070299724976664,
+    "mean_cost_bps": 161.60299724976664,
+    "forced_sale_rate": 0.46,
+    "invalid_actions_per_game": 0.07
+  },
+  "random_play": {
+    "total_reward": -2623.5926517122125,
+    "observation_sum": 12746.122242689133,
+    "total_cost_bps": 12985.92651712204
+  },
+  "block_dealer": {
+    "games": 100,
+    "win_rate": 0.3,
+    "mean_points": -21.206806728289692,
+    "mean_cost_bps": 184.06806728289692,
+    "forced_sale_rate": 0.47,
+    "invalid_actions_per_game": 0.0
+  },
+  "perfect_foresight_planner": {
+    "games": 100,
+    "win_rate": 0.48,
+    "mean_points": -16.523217720613598,
+    "mean_cost_bps": 162.43217720613595,
+    "forced_sale_rate": 0.19,
+    "invalid_actions_per_game": 0.0
+  }
+}
