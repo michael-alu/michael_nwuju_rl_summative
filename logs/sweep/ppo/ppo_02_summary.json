@@ -1,0 +1,43 @@
+{
+  "settings": {
+    "name": "ppo_02",
+    "clip": 0.2,
+    "seed": 0,
+    "gamma": 0.995,
+    "frames": 1000000,
+    "epochs": 4,
+    "rollout": 2400,
+    "entropy": 0.01,
+    "threads": 1,
+    "baseline": "on",
+    "algorithm": "ppo",
+    "minibatch": 240,
+    "gae_lambda": 0.95,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "learning_rate": 0.0003,
+    "value_coefficient": 0.5
+  },
+  "held_out": {
+    "games": 500,
+    "mean_points": -20.85174895115723,
+    "mean_cost_bps": 157.45748951157228,
+    "win_rate": 0.14,
+    "forced_sale_rate": 0.806,
+    "invalid_actions_per_game": 0.066
+  },
+  "name": "ppo_02",
+  "frames": 1000800,
+  "best_frames": 984000,
+  "validation_best": {
+    "games": 200,
+    "mean_points": -20.90602649880566,
+    "mean_cost_bps": 155.0602649880566,
+    "win_rate": 0.115,
+    "forced_sale_rate": 0.82,
+    "invalid_actions_per_game": 0.01
+  },
+  "algorithm": "ppo",
+  "episodes": 16680,
+  "seconds": 2378.9
+}

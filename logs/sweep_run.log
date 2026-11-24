@@ -1,0 +1,82 @@
+40 runs to do, 6 at a time, 1,000,000 frames each
+11:59:32 start  ppo/ppo_01
+11:59:32 start  ppo/ppo_03
+11:59:32 start  ppo/ppo_02
+11:59:32 start  ppo/ppo_04
+11:59:32 start  ppo/ppo_06
+11:59:32 start  ppo/ppo_05
+12:38:21 done   ppo/ppo_06 in 39 min: won 39.2%, points -15.8, cost 142.1 bps, forced 55.2%, invalid/game 0.0
+12:38:21 start  ppo/ppo_07
+12:38:58 done   ppo/ppo_05 in 39 min: won 46.6%, points -15.9, cost 148.2 bps, forced 41.2%, invalid/game 0.6
+12:38:58 start  ppo/ppo_08
+12:39:01 done   ppo/ppo_01 in 39 min: won 0.0%, points -30.3, cost 232.7 bps, forced 100.0%, invalid/game 0.0
+12:39:01 start  ppo/ppo_09
+12:39:05 done   ppo/ppo_04 in 40 min: won 45.4%, points -15.3, cost 144.0 bps, forced 45.6%, invalid/game 0.3
+12:39:05 start  ppo/ppo_10
+12:39:09 done   ppo/ppo_03 in 40 min: won 46.8%, points -15.4, cost 147.5 bps, forced 43.2%, invalid/game 0.2
+12:39:09 start  a2c/a2c_01
+12:39:15 done   ppo/ppo_02 in 40 min: won 14.0%, points -20.9, cost 157.5 bps, forced 80.6%, invalid/game 0.1
+12:39:15 start  a2c/a2c_02
+13:20:29 done   a2c/a2c_01 in 41 min: won 0.0%, points -31.1, cost 240.6 bps, forced 100.0%, invalid/game 0.0
+13:20:29 start  a2c/a2c_03
+13:20:37 done   a2c/a2c_02 in 41 min: won 0.0%, points -31.0, cost 240.5 bps, forced 100.0%, invalid/game 0.0
+13:20:37 start  a2c/a2c_04
+13:22:26 done   ppo/ppo_09 in 43 min: won 34.6%, points -17.3, cost 150.0 bps, forced 61.4%, invalid/game 0.1
+13:22:26 start  a2c/a2c_05
+13:23:00 done   ppo/ppo_08 in 44 min: won 36.0%, points -16.9, cost 147.9 bps, forced 59.6%, invalid/game 0.1
+13:23:00 start  a2c/a2c_06
+13:23:07 done   ppo/ppo_10 in 44 min: won 49.0%, points -14.9, cost 145.6 bps, forced 44.4%, invalid/game 0.2
+13:23:07 start  a2c/a2c_07
+13:24:32 done   ppo/ppo_07 in 46 min: won 22.8%, points -18.7, cost 143.5 bps, forced 76.4%, invalid/game 0.5
+13:24:32 start  a2c/a2c_08
+14:00:45 done   a2c/a2c_03 in 40 min: won 0.0%, points -31.0, cost 240.0 bps, forced 100.0%, invalid/game 0.0
+14:00:45 start  a2c/a2c_09
+14:00:49 done   a2c/a2c_04 in 40 min: won 0.0%, points -29.0, cost 219.9 bps, forced 100.0%, invalid/game 0.0
+14:00:49 start  a2c/a2c_10
+14:01:58 done   a2c/a2c_05 in 40 min: won 0.0%, points -28.6, cost 215.4 bps, forced 100.0%, invalid/game 0.0
+14:01:58 start  reinforce/reinforce_01
+14:02:15 done   a2c/a2c_06 in 39 min: won 0.0%, points -28.7, cost 216.8 bps, forced 100.0%, invalid/game 0.0
+14:02:15 start  reinforce/reinforce_02
+14:02:17 done   a2c/a2c_07 in 39 min: won 0.0%, points -29.4, cost 224.1 bps, forced 100.0%, invalid/game 0.0
+14:02:17 start  reinforce/reinforce_03
+14:03:26 done   a2c/a2c_08 in 39 min: won 0.0%, points -31.0, cost 239.5 bps, forced 100.0%, invalid/game 0.0
+14:03:26 start  reinforce/reinforce_04
+14:42:17 done   a2c/a2c_10 in 41 min: won 0.0%, points -27.4, cost 202.0 bps, forced 100.0%, invalid/game 0.2
+14:42:17 start  reinforce/reinforce_05
+14:42:46 done   a2c/a2c_09 in 42 min: won 0.0%, points -31.0, cost 240.4 bps, forced 100.0%, invalid/game 0.0
+14:42:46 start  reinforce/reinforce_06
+14:44:12 done   reinforce/reinforce_01 in 42 min: won 3.2%, points -35.7, cost 216.1 bps, forced 96.8%, invalid/game 7.6
+14:44:12 start  reinforce/reinforce_07
+14:44:15 done   reinforce/reinforce_02 in 42 min: won 1.0%, points -43.3, cost 222.5 bps, forced 99.0%, invalid/game 14.2
+14:44:15 start  reinforce/reinforce_08
+14:44:17 done   reinforce/reinforce_03 in 42 min: won 10.2%, points -37.3, cost 215.0 bps, forced 89.4%, invalid/game 10.3
+14:44:17 start  reinforce/reinforce_09
+14:46:05 done   reinforce/reinforce_04 in 43 min: won 0.2%, points -33.6, cost 252.7 bps, forced 99.8%, invalid/game 1.4
+14:46:05 start  reinforce/reinforce_10
+15:14:44 done   reinforce/reinforce_05 in 32 min: won 3.2%, points -37.3, cost 191.2 bps, forced 96.0%, invalid/game 11.6
+15:14:44 start  dqn/dqn_01
+15:15:09 done   reinforce/reinforce_06 in 32 min: won 3.4%, points -44.1, cost 221.7 bps, forced 96.6%, invalid/game 15.4
+15:15:09 start  dqn/dqn_02
+15:16:53 done   reinforce/reinforce_09 in 33 min: won 1.6%, points -40.3, cost 204.1 bps, forced 98.4%, invalid/game 13.1
+15:16:53 start  dqn/dqn_03
+15:17:06 done   reinforce/reinforce_07 in 33 min: won 5.4%, points -38.5, cost 212.3 bps, forced 94.6%, invalid/game 11.0
+15:17:06 start  dqn/dqn_04
+15:17:18 done   reinforce/reinforce_08 in 33 min: won 5.8%, points -37.7, cost 259.2 bps, forced 94.2%, invalid/game 5.6
+15:17:18 start  dqn/dqn_05
+15:18:12 done   reinforce/reinforce_10 in 32 min: won 4.2%, points -50.2, cost 234.2 bps, forced 95.6%, invalid/game 20.4
+15:18:12 start  dqn/dqn_06
+15:44:42 done   dqn/dqn_01 in 30 min: won 5.2%, points -25.0, cost 184.7 bps, forced 93.8%, invalid/game 0.2
+15:44:42 start  dqn/dqn_07
+15:45:07 done   dqn/dqn_02 in 30 min: won 10.4%, points -30.2, cost 172.9 bps, forced 80.0%, invalid/game 7.3
+15:45:07 start  dqn/dqn_08
+15:46:22 done   dqn/dqn_03 in 29 min: won 11.4%, points -23.5, cost 180.6 bps, forced 73.4%, invalid/game 0.0
+15:46:22 start  dqn/dqn_09
+15:46:55 done   dqn/dqn_04 in 30 min: won 9.4%, points -45.2, cost 186.3 bps, forced 88.4%, invalid/game 20.9
+15:46:55 start  dqn/dqn_10
+15:47:24 done   dqn/dqn_05 in 30 min: won 13.0%, points -43.6, cost 175.6 bps, forced 85.6%, invalid/game 20.8
+15:47:45 done   dqn/dqn_06 in 30 min: won 5.6%, points -26.3, cost 172.0 bps, forced 94.4%, invalid/game 2.9
+16:16:21 done   dqn/dqn_08 in 31 min: won 12.2%, points -24.5, cost 173.0 bps, forced 84.0%, invalid/game 2.0
+16:16:41 done   dqn/dqn_07 in 32 min: won 7.4%, points -37.0, cost 182.3 bps, forced 91.8%, invalid/game 12.8
+16:17:15 done   dqn/dqn_09 in 31 min: won 9.0%, points -24.5, cost 183.0 bps, forced 88.2%, invalid/game 0.5
+16:18:44 done   dqn/dqn_10 in 32 min: won 6.8%, points -24.4, cost 180.9 bps, forced 86.2%, invalid/game 0.2
+16:18:44 sweep finished. Report tables: uv run python -m training.sweep_report
