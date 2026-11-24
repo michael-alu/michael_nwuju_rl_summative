@@ -4,6 +4,7 @@ Plain data types (TypedDicts) live in custom_types/."""
 
 from classes.block_dealer_policy import BlockDealerPolicy
 from classes.episode_logger import EpisodeLogger
+from classes.game_session import GameSession
 from classes.liquidity_ladder_policy import LiquidityLadderPolicy
 from classes.perfect_foresight_planner import PerfectForesightPlanner
 from classes.policy import Policy
@@ -19,6 +20,7 @@ from classes.zero_value import ZeroValue
 __all__ = [
     "BlockDealerPolicy",
     "EpisodeLogger",
+    "GameSession",
     "LiquidityLadderPolicy",
     "PerfectForesightPlanner",
     "Policy",
