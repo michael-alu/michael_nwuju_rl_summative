@@ -14,3 +14,10 @@ models/*/quick_*
 # Sweep files kept on disk for the report figures, too large for the repo
 logs/sweep/**/*_episodes.csv
 logs/sweep/**/*_console.log
+
+# Report documents (the course template and the built report) stay local
+*.docx
+
+# Working notes kept local: the report draft (source of the .docx) and the UI design brief
+docs/REPORT_DRAFT.md
+docs/UI_DESIGN_BRIEF.md
