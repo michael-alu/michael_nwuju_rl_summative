@@ -1,0 +1,101 @@
+generated_on: '2026-11-23'
+source: NGX daily prices and ASI from the Kobo Terminal cache (fetch pinned to 2026-08-31); licensed, raw data not included
+date_range: 2021-01-04 to 2026-08-28
+sessions: 1399
+rules:
+  board_minimum_shares: 100000
+  small_caps: bottom third of NGX by market cap (REIT/closed-end board excluded), at least 500 sessions, at least one traded session (drops dormant or suspended names)
+  drought_month: a month where the stock clears the 100,000-share rule on fewer than 50% of its usual share of days
+  stormy_month: a month where ASI daily volatility is above 1.5x the median month
+  switch_probability: 1 / mean spell length in sessions (21 sessions per month)
+market_asi:
+  asi_daily_volatility_calm: 0.00599997
+  asi_daily_volatility_stormy: 0.0126476
+  stormy_volatility_multiplier: 2.10795
+  stormy_month_share: 0.191176
+  mean_stormy_spell_months: 1.625
+  mean_calm_spell_months: 6.11111
+  calm_to_stormy_daily: 0.00779221
+  stormy_to_calm_daily: 0.029304
+big_banks_basket:
+  members: 5
+  symbols:
+  - ACCESSCORP
+  - FIRSTHOLDCO
+  - GTCO
+  - UBA
+  - ZENITHBANK
+  weighting: equal weight, daily rebalanced, corporate-action jumps over 25% set to zero
+  beta_to_asi: 1.13627
+  daily_idiosyncratic_volatility: 0.0161872
+  measured_on: non-overlapping 1-session returns
+bank_liquidity:
+  symbol: ZENITHBANK
+  median_daily_value_naira: 538008000.0
+small_caps_basket:
+  members: 37
+  weighting: equal weight, daily rebalanced, corporate-action jumps over 25% set to zero
+  beta_to_asi: 0.52938
+  daily_idiosyncratic_volatility: 0.0123342
+  measured_on: non-overlapping 20-session returns
+small_caps_liquidity:
+  stocks_used: 37
+  symbols:
+  - ABCTRANS
+  - ACADEMY
+  - AFRINSURE
+  - AFROMEDIA
+  - ALEX
+  - AUSTINLAZ
+  - CAVERTON
+  - CHELLARAM
+  - CILEASING
+  - EKOCORP
+  - ENAMELWA
+  - GOLDBREW
+  - GUINEAINS
+  - INTENEGINS
+  - JOHNHOLT
+  - JULI
+  - LEARNAFRCA
+  - MCNICHOLS
+  - MEYER
+  - MORISON
+  - MULTIVERSE
+  - NNFM
+  - NSLTECH
+  - OMATEK
+  - PHARMDEKO
+  - PREMPAINTS
+  - REDSTAREX
+  - REGALINS
+  - ROYALEX
+  - RTBRISCOE
+  - THOMASWY
+  - TRANSEXPR
+  - TRIPPLEG
+  - UNIONDICON
+  - UNIVINSURE
+  - UPL
+  - VERITASKAP
+  zero_volume_rate_median: 0.305218
+  median_traded_volume_shares: 106551.0
+  log_volume_sigma_median: 2.52604
+  drought_month_share: 0.445946
+  mean_drought_spell_months: 5.2186
+  mean_normal_spell_months: 6.22321
+  normal_to_drought_daily: 0.00765184
+  drought_to_normal_daily: 0.00912486
+  zero_volume_rate_normal_months_median: 0.0732807
+  zero_volume_rate_drought_months_median: 0.618182
+  drought_volume_vs_normal_median: 0.0366015
+small_caps_volume_persistence:
+  window: 2021-01-04 to 2026-08-28
+  stocks: 37
+  log_volume_lag1_autocorrelation_median: 0.519122
+  log_volume_lag1_autocorrelation_quartiles:
+  - 0.44332197030834397
+  - 0.6209238883673635
+  zero_after_zero_median: 0.651054
+  zero_after_traded_median: 0.126448
+  method: 'per stock: correlation of log volume on consecutive traded sessions; zero-volume transition frequencies; medians across stocks'

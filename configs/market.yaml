@@ -1,0 +1,101 @@
+# ThinBook Pension. All settings for the main environment.
+#
+# Story: the agent manages a Nigerian pension fund for 60 trading days. Retirees collect their
+# retirement money: scheduled retirements are known in advance; early withdrawals (for example
+# after a job loss) and death benefits paid to families arrive at short notice. The manager must
+# pay every payout on time and keep the fund inside its PenCom-style investment limits, while
+# losing as little as possible to selling costs.
+#
+# Tags: [calibrated] from NGX data (configs/calibration.yaml), [NGX rule], [assumption].
+# DESIGN KNOB marks the only settings the design checks may adjust (scripts/design_checks.py).
+# FROZEN 2026-11-23: market, 5 actions (wait, sell T-bills, sell bank shares, sell small-cap shares, call a big buyer),
+# X = 125 bps, end scores +/-7. No more pass marks and no re-deriving X.
+# Design checks a, b, c PASS with the knob values below.
+
+# Game
+starting_fund_naira: 10000000          # [assumption] N10m fund
+horizon_days: 60                       # [assumption] 60 trading days
+points_per_naira: 0.0001               # 1 point = N10,000 of selling cost
+invalid_action_penalty: 1.0            # [assumption] points lost per invalid action (it acts as Wait)
+end_score_won: 7.0                     # FROZEN: half-std rule (std of block_dealer total points with 5 actions 14.3 -> 7)
+end_score_lost: -7.0                   # FROZEN
+won_cost_bps: 125.0                    # FROZEN: round X where the best simple baseline (block_dealer) wins 30-40% (37.6% with 5 actions)
+
+# Starting mix (DESIGN KNOB) and small-cap position size (DESIGN KNOB)
+start_tbills: 0.15                     # DESIGN KNOB
+start_banks: 0.55                      # DESIGN KNOB
+start_small_caps: 0.30                 # DESIGN KNOB
+small_caps_position_days: 110          # DESIGN KNOB (set by scripts/design_checks.py, 2026-11-23): small-cap holding = this many days of median traded volume; was 30, raised so the median game must sell 44% of what the volume cap allows
+
+# PenCom-style investment limits. FLAGGED: these are NOT the exact PenCom figures.
+small_caps_max_share: 0.35             # [assumption]
+banks_min_share: 0.35                  # [assumption]
+banks_max_share: 0.70                  # [assumption]
+breach_grace_days: 10                  # [assumption] a breach caused by payouts may last this many trading days before forced sales start
+
+# Pension payouts (the heart of the game)
+payouts_min: 3                        # [assumption] payouts per game, uniform
+payouts_max: 8
+payouts_total_min: 0.20               # DESIGN KNOB: total of all payouts as a share of the starting fund, uniform
+payouts_total_max: 0.50               # DESIGN KNOB
+announced_share: 0.5                   # [assumption] share of payouts that are scheduled retirements (known in advance); the rest are early withdrawals and death benefits
+announced_notice_min: 5                # [assumption] trading days of notice for a scheduled retirement
+announced_notice_max: 15
+sudden_notice_min: 2                   # [assumption] early withdrawals and death benefits are due 2 to 3 days after they are claimed
+sudden_notice_max: 3
+sudden_stormy_weight: 2.0              # [assumption] FLAGGED: early withdrawals and death benefits are twice as likely on stormy days (job losses rise in turmoil)
+
+# Trade sizes, as shares of the STARTING fund value (clipped by holdings; small caps also by the volume cap)
+tbill_slice: 0.05                      # [assumption]
+banks_slice: 0.02507                   # DESIGN KNOB (structural): half the median single payout (scripts/size_simple_slices.py)
+small_caps_slice: 0.00121              # DESIGN KNOB (structural): the median game's required small-cap sale / 60 days, capped by the volume limit on an average traded day (scripts/size_simple_slices.py)
+big_buyer_slice: 0.08                  # [assumption] the big buyer takes up to 8% of the starting fund in one deal
+
+# Fees (published NGX equities fee schedule; commission at the 0.75% low end is an assumption)
+stock_sell_fee: 0.015313               # [NGX rule] 0.75*1.075 + 0.3*1.075 + 0.3*1.075 + 0.08 = 1.5313%
+tbill_fee: 0.0001                      # [assumption] tiny dealing cost on T-bill sales
+stock_settlement_days: 1               # [NGX rule, to verify] stock sale cash arrives T+1; T-bills settle the same day [assumption]
+
+# Forced sales (fire sales)
+small_caps_fire_sale_discount: 0.15    # [assumption] forced small-cap sales go at fair value x (1 - 15%)
+banks_fire_sale_discount: 0.02         # [assumption] forced bank sales go at fair value x (1 - 2%)
+forced_buy_premium: 0.05               # [assumption] if banks fall below their lower limit after grace, the env buys banks back at +5%
+
+# Volatility regime (calm or stormy), sticky Markov chain [calibrated from the ASI]
+calm_to_stormy_daily: 0.0078           # [calibrated]
+stormy_to_calm_daily: 0.0293           # [calibrated]
+stormy_volatility_multiplier: 2.1      # [calibrated]
+
+# Fair values follow zero-drift random walks (scoring ignores market direction)
+banks_daily_volatility: 0.0176         # [calibrated] banks basket, calm: sqrt((1.136 x 0.0060)^2 + 0.0162^2)
+small_caps_daily_volatility: 0.0127    # [calibrated] small-caps basket, calm: sqrt((0.529 x 0.0060)^2 + 0.0123^2)
+banks_start_price: 50.0                # [assumption]
+banks_daily_value_naira: 538000000     # [calibrated] ZENITHBANK median daily traded value, a conservative floor for the basket
+banks_value_log_sigma: 0.5             # [assumption]
+banks_impact_coefficient: 0.05         # [assumption] cost = coefficient x sqrt(trade value / day's traded value)
+
+# Small-cap liquidity
+normal_to_drought_daily: 0.0077        # [calibrated]
+drought_to_normal_daily: 0.0091        # [calibrated]
+small_caps_median_volume: 106551       # [calibrated] median small-cap volume on traded days (shares)
+small_caps_volume_log_sigma: 2.53      # [calibrated] spread of log volume on traded days
+small_caps_volume_autocorrelation: 0.519 # [calibrated] day-to-day correlation of log volume on traded days
+small_caps_zero_volume_normal: 0.073   # [calibrated]
+small_caps_zero_volume_drought: 0.618  # [calibrated]
+small_caps_drought_volume_multiplier: 0.089 # [calibrated, derived]
+board_minimum_shares: 100000           # [NGX rule] board price changes only on days with 100,000+ shares traded (per-trade rule applied to daily volume [assumption])
+participation_limit: 0.20              # [assumption] the fund can be at most 20% of the day's volume
+small_caps_temporary_impact: 0.05      # [assumption] cost on the day = coefficient x sqrt(participation)
+small_caps_permanent_impact: 0.05      # [assumption] lasting drop = coefficient x participation, fades by half every 5 days
+small_caps_impact_half_life_days: 5    # [assumption]
+
+# Big buyer for small caps
+big_buyer_probability_normal: 0.08     # [assumption]
+big_buyer_probability_drought: 0.04    # [assumption]
+big_buyer_discount: 0.08               # [assumption] deal at fair value x (1 - 8%)
+
+# Observation scaling
+volatility_window_days: 20
+volume_window_days: 5
+staleness_cap_days: 20
+volume_ratio_cap: 20.0

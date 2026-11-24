@@ -1,0 +1,8 @@
+# Harder unseen market for the generalization test. [assumption] all values.
+# Only the keys listed here change; everything else comes from market.yaml.
+normal_to_drought_daily: 0.0154       # [assumption] droughts start twice as often
+drought_to_normal_daily: 0.0046       # [assumption] and last twice as long
+calm_to_stormy_daily: 0.0156          # [assumption] storms start twice as often
+stormy_to_calm_daily: 0.0147          # [assumption] and last twice as long
+payouts_total_min: 0.30              # [assumption] bigger total pension payouts
+payouts_total_max: 0.60              # [assumption] (normal market: 0.20 to 0.50)
