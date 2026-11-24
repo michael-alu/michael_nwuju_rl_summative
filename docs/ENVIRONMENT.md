@@ -108,9 +108,27 @@ After day 60 (`terminated = True`). There is no early ending: every payout must 
 
 Today's choice changes tomorrow's options. Selling small caps now moves their price for the next few days; cash from stock sales arrives a day late; a limit breach starts a 10-day clock; a big buyer appears only some days; early withdrawals and death benefits arrive without warning, so cash held back today avoids a fire sale later. Volume persists from day to day, so yesterday's busy market is a clue about today's. The best action depends on the whole path, not on one day's data, which is a sequential decision problem under partial observation.
 
-## Integration (UI-ready)
+## Visualisation
+
+`uv run play.py` (or `uv run main.py`) opens a three.js view of one game, fast-forwarded day by day. Three towers on a platform show the T-bills, bank shares and small-cap shares held, valued at starting prices, which is also how the limits are measured. Beside them, a cash pile has a faded layer on top for cash arriving tomorrow (stock sales settle T+1). A red ring marks the 35% small-cap limit and a green band the 35% to 70% bank range; a breach shows a grace countdown. A briefcase appears on days a big buyer is offered, and a tower flashes red with "FORCED SALE" when the env fire-sells. Side panels show the payout queue and the score; a bottom chart shows the small-cap board price against the real price. Beside the vault, the agent is drawn as a fund manager at a desk: each day it turns to the tower it sells, says what it is doing, and that day's reward (the env's own reward, sent by the server with every day) floats up beside it, while a wall scoreboard shows the running total. The page opens in a simple view in plain words; "Show details" switches to the detailed view with the finance terms (shares of the fund, basis points, limit figures, the observable market signals and the hidden state).
+
+The view only reads `env.to_json_state()` and the info dict; it never changes the game. Everything the agent can observe is shown normally. Three things are hidden from the agent and are marked as such on screen: the real small-cap price (the agent only sees the stale board price, which is the point of the game), and the calm/stormy and drought regimes (shown only behind a "Show hidden state" box). The planner is labelled "Perfect foresight (cheats: sees the future)".
+
+## Integration
 
 `step()` returns an info dict with everything a frontend needs: day, action name, trades with their costs, book weights, cash and settling cash, known payouts (kind, amount, due day), limit status and grace days, board and fair prices, volume, big-buyer offer, regimes (UI and debugging only, never in the observation), points, cost in bps, forced events and the outcome. `env.to_json_state()` returns the same as JSON plus the named observation.
+
+The server in `environment/rendering.py` (FastAPI) exposes it; the endpoints are documented with examples in the README and at `/docs`:
+
+| Endpoint | What it does |
+|---|---|
+| `GET /health` | status and the trained agents loaded |
+| `GET /models` | every player and its source run, plus the observation order and action names |
+| `POST /act` | one observation (15 numbers between 0 and 1, in the order above) in, one action out, with action probabilities for policy-gradient agents; 422 on a wrong length or range |
+| `POST /episode` | plays a whole game (player, seed, market) and returns every day plus the outcome, so another app can replay it |
+| `WS /ws/game` | streams a game day by day to the browser; pause, step and speed changes go over the same socket |
+
+Serialization path. Trained networks are saved as `torch.save(network.state_dict())` in `models/<pg|dqn>/<run>_best.pt`. The network shape needed to rebuild one is fixed except for its width: 15 observation numbers in, two hidden layers of `settings["hidden_size"]` units with Tanh, 5 action scores out (`training/common.py`, `make_network`); the width is read from the run's `_summary.json`. To load: `network = make_network(5, hidden_size)`, then `network.load_state_dict(torch.load(path))`, then feed it a float32 tensor of the 15 observation numbers and take the highest score. `environment/model_registry.py` does this for the best run of each algorithm (best held-out win rate, mean points break ties).
 
 ## Limitations
 

@@ -12,20 +12,99 @@ The fund holds T-bills, a big-banks basket and a small-caps basket. Small caps t
 
 ```
 uv sync
+uv run main.py                       # watch the best trained agent play in the browser (same as uv run play.py)
+uv run main.py play --player random  # the environment with random actions
 uv run main.py episode --policy block_dealer --seed 100000
 uv run main.py baselines
 uv run main.py design-checks
 uv run pytest
 ```
 
+## Watch the agent
+
+```
+uv run play.py
+uv run play.py --player block_dealer --seed 100042 --market hard --speed 20
+uv run play.py --no-browser --port 8001
+```
+
+This starts a local server, loads the best trained agent, opens the browser and plays a game at 5x speed. The terminal prints which model was loaded, the address, one line per trading day and a summary at the end. Stop the server with Ctrl+C. Flags (the same for `uv run main.py`): `--player` (ppo, dqn, a2c, reinforce, block_dealer, perfect_foresight, random), `--seed` (the same seed always draws the same game), `--market` (normal or hard), `--speed` (1, 5, 20 or instant), `--no-browser`, `--port`.
+
+![ThinBook Pension mid-game](assets/env_screenshot.png)
+
+The screen starts in a simple view with plain words for anyone. "Show details" in the top bar (or `?detailed=1` in the address) switches to the detailed view with the finance terms and exact numbers: shares of the fund, basis points, the investment limit figures, what the agent can observe of the market and the hidden state (`assets/env_screenshot_detailed.png`). The browser remembers the choice.
+
+What the screen shows:
+
+- Centre left, the agent's office: the agent is a fund manager at a desk. Every day it turns to the tower it sells and points (or stays put when it waits), says what it is doing in a speech bubble, and that day's reward floats up beside it (red when it costs points, grey when nothing happened, green for the win bonus). The scoreboard on the office wall shows the running score and the change today, so the reward visibly rises and falls. At the end the manager celebrates or slumps.
+- Centre, the fund vault (three.js): T-bills, bank shares and small-cap shares as towers, with their value and share of the fund; cash as a pile, with cash arriving tomorrow shown faded on top. The red ring is the 35% small-cap limit and the green band the 35% to 70% bank range; when a limit is broken, a countdown shows how many days are left to fix it. A briefcase appears on days a big buyer is offering, and a tower flashes red with "FORCED SALE" when the fund is forced to fire-sell. Drag to rotate, scroll to zoom, "Reset view" to go back.
+- Left, retirees waiting for their money: one card per known payout with its countdown; sudden ones are highlighted when they appear; paid cards turn green, or red if a fire sale paid them.
+- Right, score and status: the day, today's action in plain words (invalid actions are flagged), the reward today and the total score with a chart (a bar for each day's reward, a line for the running total), the money lost to selling against the amount allowed for a win, fire sales and mistakes. The detailed view shows the same in basis points and adds what the agent can see of the market; "Show hidden state" there reveals what the agent cannot see.
+- Bottom, the stale-price chart: the small-cap board price (what the agent sees, flat until a day with 100,000+ shares traded) against the real price (hidden from the agent), with the gap shaded; dots mark the agent's small-cap sales and big-buyer deals.
+- End: a WON or LOST banner with the reason in plain words and a summary, with "Play again (same game)" and "New game".
+
+Controls (top bar): player, game number with "Random game", market, Play, Pause, Step one day, speed (1x, 5x, 20x, Instant) and "?" for a plain-words guide to the game. The trained agents are picked by `environment/model_registry.py` from the sweep (best held-out win rate per algorithm); until the sweep has a PPO run, PPO uses `models/pg/pension5_seed0_best.pt`, and algorithms with no finished run show "not trained yet". The page also takes options in its address: `?player=ppo&seed=100008&replay=1&pause_at=30` replays a game through `POST /episode` and stops on day 30 (that is how the screenshot above was taken).
+
+## API
+
+The same server exposes the agents to other apps. Interactive docs: http://127.0.0.1:8000/docs (after `uv run play.py`).
+
+Health and loaded models:
+
+```
+curl http://127.0.0.1:8000/health
+{"status":"ok","models":{"ppo":"Best PPO (pension5_seed0, wins 46.6%)"}}
+```
+
+Players and the observation order (`GET /models`, shortened):
+
+```
+curl http://127.0.0.1:8000/models
+{"players": [{"player": "ppo", "label": "Best PPO (pension5_seed0, wins 46.6%)", "kind": "agent", "run_name": "pension5_seed0",
+              "source": "models/pg/pension5_seed0_best.pt", "held_out_win_rate": 0.466, "held_out_mean_points": -15.16,
+              "hidden_size": 128, "available": true, "note": "fallback until the sweep has a PPO run"},
+             {"player": "dqn", "label": "Best DQN (not trained yet)", "available": false, ...}, ...],
+ "observation_names": ["days_left", "tbills_share", "banks_vs_limits", ...],
+ "action_names": ["Wait", "Sell T-bills", "Sell bank shares", "Sell small-cap shares", "Call a big buyer"]}
+```
+
+One decision (`POST /act`): 15 observation numbers, each between 0 and 1, in the order above. Policy-gradient agents also return the probability of each action; DQN returns `null` there.
+
+```
+curl -X POST http://127.0.0.1:8000/act -H "content-type: application/json" \
+     -d '{"observation": [0.5, 0.15, 0.6, 0.43, 0, 0, 0, 0, 1, 1, 0, 0.3, 0.3, 0.2, 0], "player": "ppo"}'
+{"action_id":1,"action_name":"Sell T-bills","probabilities":[0.12297238409519196,0.4943615794181824,0.0004037896287627518,0.3822622001171112,4.712065737599858e-10]}
+
+curl -X POST http://127.0.0.1:8000/act -H "content-type: application/json" -d '{"observation": [0.5, 0.2], "player": "ppo"}'
+{"detail":"observation must have 15 numbers (got 2); see GET /models for the order."}     (HTTP 422)
+```
+
+A whole game (`POST /episode`): every day's state (the same JSON the browser receives) plus the outcome, so another app can replay it.
+
+```
+curl -X POST http://127.0.0.1:8000/episode -H "content-type: application/json" \
+     -d '{"player": "block_dealer", "seed": 100000, "market": "normal"}'
+{"meta": {...}, "days": [61 entries: {"type": "day", "state": {...}, "action_text": "Sold bank shares", "reward": -0.40, "finished": false, ...}],
+ "outcome": "lost", "outcome_text": "Lost: selling cost 184 bps, over the 125 bps line",
+ "total_points": -25.366064232866265, "cost_bps": 183.66064232866265, "forced_sales": 0, "invalid_actions": 0}
+```
+
+The browser game uses a WebSocket, `ws://127.0.0.1:8000/ws/game`: send `{"player": "ppo", "seed": 100000, "market": "normal", "speed": "5"}`, then receive one `meta` message and one `day` message per trading day; send `{"type": "pause"}`, `{"type": "play"}`, `{"type": "step"}` or `{"type": "speed", "speed": "20"}` at any time. One game per connection.
+
+How models are saved and loaded (the serialization path) is described in `docs/ENVIRONMENT.md` under Integration.
+
 ## Layout
 
 - `environment/custom_env.py`: the game's rules in words, its constants (actions, observation names) and the config loaders
 - `environment/baselines.py`: plays and scores the baselines and the perfect-foresight planner (an analysis tool, never used in training)
 - `environment/policy_helpers.py`: shared cash-planning helpers for the baselines
-- `classes/`: every class with behaviour in its own file: the gymnasium environment (`classes/thin_book_pension_env.py`), the baseline policies, the planner, `TorchPolicy`, `EpisodeLogger`, `ZeroValue`; import them with `from classes import ThinBookPensionEnv`
+- `classes/`: every class with behaviour in its own file: the gymnasium environment (`classes/thin_book_pension_env.py`), the baseline policies, the planner, `GameSession` (one game for the browser and API), `TorchPolicy`, `EpisodeLogger`, `ZeroValue`; import them with `from classes import ThinBookPensionEnv`
 - `custom_types/`: every data type (TypedDict) in its own file: the config, the info dict, payouts, trades and results; import them with `from custom_types import StepInfo`
-- `environment/rendering.py`: day-by-day terminal view
+- `environment/rendering.py`: the terminal view and the server: browser game, WebSocket stream and REST API
+- `environment/web/`: the browser game (plain HTML, CSS and JavaScript modules; three.js 0.160.0 vendored in `vendor/` with its MIT licence, no build step)
+- `environment/model_registry.py`: finds and loads the best trained model per algorithm
+- `play.py`: starts the browser game (same as `uv run main.py`)
+- `assets/`: the environment screenshot for the report
 - `training/pg_training.py`: PPO, A2C and REINFORCE with TorchRL
 - `training/dqn_training.py`: DQN with TorchRL
 - `training/sweep.py`, `training/sweep_report.py`: the hyperparameter sweep and its report tables
@@ -34,4 +113,4 @@ uv run pytest
 - `scripts/`: calibration, design checks, slice sizing, agent evaluation, agents-vs-baselines tables, determinism check
 - `docs/`: environment spec, assumptions, design history
 
-Work in progress: the hyperparameter sweeps, figures, the three.js view and the report come next.
+Work in progress: the hyperparameter sweep is running; figures and the report come next.
