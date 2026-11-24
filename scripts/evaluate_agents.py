@@ -7,7 +7,7 @@ big buyer offered). For comparison, random play is scored too.
 
 Run from the project root:
 
-uv run python scripts/evaluate_agents.py models/dqn/quick_dqn_best.pt models/pg/quick_a2c_v3_best.pt
+uv run python scripts/evaluate_agents.py models/pg/pension5_seed0_best.pt models/pg/pension5_seed1_best.pt models/pg/pension5_seed2_best.pt
 """
 
 import sys
