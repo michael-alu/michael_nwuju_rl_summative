@@ -1,0 +1,12 @@
+500 held-out seeds, X = 125 bps
+random                             won   3.8%  points   -51.9  cost  247.6 bps  forced  84.6%  invalid/game 20.6
+a2c_10_best                        won   0.0%  points   -27.4  cost  202.0 bps  forced 100.0%  invalid/game 0.2
+    all days                   (6000 days): Sell small-cap shares 53%, Wait 45%, Call a big buyer 1%
+    payout due within 5 days   (2008 days): Wait 57%, Sell small-cap shares 41%, Call a big buyer 2%
+    over the small-cap limit   (1622 days): Sell small-cap shares 49%, Wait 48%, Call a big buyer 3%
+    big buyer offered          (399 days): Wait 79%, Call a big buyer 20%, Sell small-cap shares 1%
+ppo_10_best                        won  49.0%  points   -14.9  cost  145.6 bps  forced  44.4%  invalid/game 0.2
+    all days                   (6000 days): Sell small-cap shares 45%, Wait 37%, Sell bank shares 12%
+    payout due within 5 days   (2008 days): Sell small-cap shares 40%, Sell bank shares 33%, Wait 20%
+    over the small-cap limit   (776 days): Sell small-cap shares 63%, Wait 28%, Call a big buyer 6%
+    big buyer offered          (399 days): Sell small-cap shares 61%, Call a big buyer 27%, Sell T-bills 9%
