@@ -1,0 +1,37 @@
+[project]
+name = "thinbook"
+version = "0.1.0"
+description = "ThinBook: learning to sell a large block in a thin African stock market with reinforcement learning (DQN, REINFORCE, A2C, PPO in TorchRL)."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "numpy>=1.26,<2",
+    "gymnasium==0.29.1",
+    "torch==2.2.2",
+    "torchrl==0.3.1",
+    "tensordict==0.3.2",
+    "pandas>=2.1,<2.3",
+    "matplotlib>=3.8,<3.10",
+    "pyyaml>=6.0",
+    "fastapi>=0.110,<0.116",
+    "uvicorn[standard]>=0.29,<0.33",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "mypy>=1.10",
+    "pandas-stubs",
+    "types-pyyaml",
+]
+
+[tool.uv]
+package = false
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
