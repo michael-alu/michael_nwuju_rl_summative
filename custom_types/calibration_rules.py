@@ -1,4 +1,6 @@
-"""The rules calibrate.py used, written next to its numbers."""
+"""
+The rules calibrate.py used, written next to its numbers.
+"""
 
 from typing import TypedDict
 

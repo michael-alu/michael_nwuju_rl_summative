@@ -1,4 +1,6 @@
-"""How much cash the pro-rata baseline has raised from each asset so far."""
+"""
+How much cash the pro-rata baseline has raised from each asset so far.
+"""
 
 from typing import TypedDict
 

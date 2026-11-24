@@ -1,4 +1,6 @@
-"""Every setting in configs/market.yaml, with its type."""
+"""
+Every setting in configs/market.yaml, with its type.
+"""
 
 from typing import TypedDict
 

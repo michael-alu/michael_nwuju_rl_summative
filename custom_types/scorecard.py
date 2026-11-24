@@ -1,4 +1,6 @@
-"""The five numbers every summary and table reports, plus how many games were played."""
+"""
+The five numbers every summary and table reports, plus how many games were played.
+"""
 
 from typing import TypedDict
 

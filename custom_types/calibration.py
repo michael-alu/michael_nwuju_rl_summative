@@ -1,4 +1,6 @@
-"""Everything in configs/calibration.yaml."""
+"""
+Everything in configs/calibration.yaml.
+"""
 
 from typing import NotRequired, TypedDict
 

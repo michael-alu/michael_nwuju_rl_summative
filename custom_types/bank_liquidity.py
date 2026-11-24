@@ -1,4 +1,6 @@
-"""Median daily traded value of the bank used as the liquidity floor."""
+"""
+Median daily traded value of the bank used as the liquidity floor.
+"""
 
 from typing import TypedDict
 

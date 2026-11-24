@@ -1,4 +1,6 @@
-"""How far (in naira at book prices) the fund is outside each investment limit."""
+"""
+How far (in naira at book prices) the fund is outside each investment limit.
+"""
 
 from typing import TypedDict
 

@@ -1,4 +1,6 @@
-"""Small-cap volume, zero-volume days and drought months."""
+"""
+Small-cap volume, zero-volume days and drought months.
+"""
 
 from typing import TypedDict
 

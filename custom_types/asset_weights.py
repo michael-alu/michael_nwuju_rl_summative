@@ -1,4 +1,6 @@
-"""The fund's book weights: cash, T-bills, banks and small caps."""
+"""
+The fund's book weights: cash, T-bills, banks and small caps.
+"""
 
 from typing import TypedDict
 

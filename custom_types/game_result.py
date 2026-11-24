@@ -1,4 +1,6 @@
-"""The result of one played game."""
+"""
+The result of one played game.
+"""
 
 from typing import TypedDict
 

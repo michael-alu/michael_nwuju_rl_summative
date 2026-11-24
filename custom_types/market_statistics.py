@@ -1,4 +1,6 @@
-"""Calm and stormy months of the NGX All Share Index."""
+"""
+Calm and stormy months of the NGX All Share Index.
+"""
 
 from typing import TypedDict
 

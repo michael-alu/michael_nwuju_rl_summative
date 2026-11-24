@@ -1,4 +1,6 @@
-"""One sale (or forced bank purchase) made during a day, with its cost."""
+"""
+One sale (or forced bank purchase) made during a day, with its cost.
+"""
 
 from typing import TypedDict
 

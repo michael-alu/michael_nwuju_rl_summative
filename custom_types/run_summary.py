@@ -1,4 +1,6 @@
-"""What one training run saves in its _summary.json file."""
+"""
+What one training run saves in its _summary.json file.
+"""
 
 from typing import TypedDict
 

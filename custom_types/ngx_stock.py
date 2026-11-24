@@ -1,4 +1,6 @@
-"""One stock in the NGX universe file of the capstone data."""
+"""
+One stock in the NGX universe file of the capstone data.
+"""
 
 from typing import TypedDict
 

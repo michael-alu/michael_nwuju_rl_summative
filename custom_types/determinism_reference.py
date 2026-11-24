@@ -1,4 +1,6 @@
-"""The numbers the determinism check saves and compares, with a note on why they were saved."""
+"""
+The numbers the determinism check saves and compares, with a note on why they were saved.
+"""
 
 from typing import NotRequired, TypedDict
 

@@ -1,4 +1,6 @@
-"""One simulated market day, drawn at reset."""
+"""
+One simulated market day, drawn at reset.
+"""
 
 from typing import TypedDict
 

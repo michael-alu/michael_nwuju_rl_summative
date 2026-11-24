@@ -1,4 +1,6 @@
-"""Where one sweep run keeps its logs, summary and models."""
+"""
+Where one sweep run keeps its logs, summary and models.
+"""
 
 from pathlib import Path
 from typing import TypedDict

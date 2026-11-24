@@ -1,4 +1,6 @@
-"""Beta to the ASI and daily idiosyncratic volatility of an equal-weight basket."""
+"""
+Beta to the ASI and daily idiosyncratic volatility of an equal-weight basket.
+"""
 
 from typing import NotRequired, TypedDict
 

@@ -1,4 +1,6 @@
-"""Everything the env reports after a day: the info dict of reset() and step()."""
+"""
+Everything the env reports after a day: the info dict of reset() and step().
+"""
 
 from typing import TypedDict
 

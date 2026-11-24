@@ -1,4 +1,6 @@
-"""How much small-cap volume persists from one day to the next."""
+"""
+How much small-cap volume persists from one day to the next.
+"""
 
 from typing import TypedDict
 

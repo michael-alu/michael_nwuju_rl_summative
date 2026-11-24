@@ -1,4 +1,6 @@
-"""One pension payout: when it was claimed, when it is due, how much, and whether it is paid."""
+"""
+One pension payout: when it was claimed, when it is due, how much, and whether it is paid.
+"""
 
 from typing import TypedDict
 

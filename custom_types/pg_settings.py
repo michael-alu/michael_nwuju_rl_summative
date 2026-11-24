@@ -1,4 +1,6 @@
-"""The command-line settings of one PPO, A2C or REINFORCE run, as saved in its summary."""
+"""
+The command-line settings of one PPO, A2C or REINFORCE run, as saved in its summary.
+"""
 
 from typing import TypedDict
 

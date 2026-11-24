@@ -1,4 +1,6 @@
-"""The losses and entropy after one PPO, A2C or REINFORCE update."""
+"""
+The losses and entropy after one PPO, A2C or REINFORCE update.
+"""
 
 from typing import TypedDict
 
