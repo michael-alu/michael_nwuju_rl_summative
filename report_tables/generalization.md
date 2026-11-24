@@ -1,0 +1,8 @@
+| Player | Normal: win rate | Normal: mean points | Normal: cost (bps) | Hard: win rate | Hard: mean points | Hard: cost (bps) | Hard: forced-sale rate | Change in win rate |
+|---|---|---|---|---|---|---|---|---|
+| DQN (dqn_05) | 13.0% | -43.59 | 175.6 | 7.4% | -50.97 | 254.7 | 90.4% | -5.6 points |
+| REINFORCE (reinforce_03) | 10.2% | -37.34 | 215.0 | 1.0% | -51.32 | 308.9 | 98.4% | -9.2 points |
+| A2C (a2c_10) | 0.0% | -27.39 | 202.0 | 0.0% | -36.15 | 291.4 | 100.0% | +0.0 points |
+| PPO (ppo_10) | 49.0% | -14.95 | 145.6 | 18.0% | -26.67 | 211.2 | 72.2% | -31.0 points |
+| Best simple rule (block_dealer) | 37.6% | -18.29 | 165.6 | 11.8% | -31.12 | 257.7 | 65.6% | -25.8 points |
+| Perfect foresight (cheats) | 53.6% | -14.71 | 152.2 | 21.6% | -27.84 | 238.7 | 37.0% | -32.0 points |
