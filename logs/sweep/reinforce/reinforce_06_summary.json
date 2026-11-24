@@ -1,0 +1,43 @@
+{
+  "settings": {
+    "name": "reinforce_06",
+    "clip": 0.2,
+    "seed": 0,
+    "gamma": 0.995,
+    "frames": 1000000,
+    "epochs": 4,
+    "rollout": 6000,
+    "entropy": 0.01,
+    "threads": 1,
+    "baseline": "on",
+    "algorithm": "reinforce",
+    "minibatch": 240,
+    "gae_lambda": 0.95,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "learning_rate": 0.0003,
+    "value_coefficient": 0.5
+  },
+  "held_out": {
+    "games": 500,
+    "mean_points": -44.085262180505495,
+    "mean_cost_bps": 221.65262180505496,
+    "win_rate": 0.034,
+    "forced_sale_rate": 0.966,
+    "invalid_actions_per_game": 15.396
+  },
+  "name": "reinforce_06",
+  "frames": 1002000,
+  "best_frames": 768000,
+  "validation_best": {
+    "games": 200,
+    "mean_points": -43.025163781051944,
+    "mean_cost_bps": 219.15163781051945,
+    "win_rate": 0.045,
+    "forced_sale_rate": 0.955,
+    "invalid_actions_per_game": 14.74
+  },
+  "algorithm": "reinforce",
+  "episodes": 16700,
+  "seconds": 1937.3
+}
