@@ -1,0 +1,43 @@
+{
+  "settings": {
+    "name": "a2c_03",
+    "clip": 0.2,
+    "seed": 0,
+    "gamma": 0.995,
+    "frames": 1000000,
+    "epochs": 4,
+    "rollout": 1200,
+    "entropy": 0.02,
+    "threads": 1,
+    "baseline": "on",
+    "algorithm": "a2c",
+    "minibatch": 240,
+    "gae_lambda": 0.95,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "learning_rate": 0.0003,
+    "value_coefficient": 0.5
+  },
+  "held_out": {
+    "games": 500,
+    "mean_points": -30.9970413769749,
+    "mean_cost_bps": 239.970413769749,
+    "win_rate": 0.0,
+    "forced_sale_rate": 1.0,
+    "invalid_actions_per_game": 0.0
+  },
+  "name": "a2c_03",
+  "frames": 1000800,
+  "best_frames": 960000,
+  "validation_best": {
+    "games": 200,
+    "mean_points": -30.85874985377958,
+    "mean_cost_bps": 238.58749853779582,
+    "win_rate": 0.0,
+    "forced_sale_rate": 1.0,
+    "invalid_actions_per_game": 0.0
+  },
+  "algorithm": "a2c",
+  "episodes": 16680,
+  "seconds": 2410.4
+}
