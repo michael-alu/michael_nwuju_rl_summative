@@ -30,12 +30,12 @@ def dqn_columns(settings: DqnSettings) -> TableRow:
     target = f"soft, tau {settings['tau']}" if settings["target_update"] == "soft" else f"hard, every {settings['hard_update_every']} updates"
 
     columns: TableRow = {
-        "Target Update": target,
-        "Gamma": settings["gamma"],
-        "Exploration Strategy": exploration,
-        "Batch Size": settings["batch_size"],
         "Learning Rate": settings["learning_rate"],
+        "Gamma": settings["gamma"],
         "Replay Buffer Size": settings["buffer_size"],
+        "Batch Size": settings["batch_size"],
+        "Exploration Strategy": exploration,
+        "Target Update": target,
         "Network": f"2 x {settings['hidden_size']}",
     }
 
@@ -45,42 +45,42 @@ def dqn_columns(settings: DqnSettings) -> TableRow:
 def policy_gradient_columns(algorithm: str, settings: PgSettings) -> TableRow:
     if algorithm == "reinforce":
         return {
+            "Learning Rate": settings["learning_rate"],
             "Gamma": settings["gamma"],
             "Baseline": settings["baseline"],
-            "Learning Rate": settings["learning_rate"],
             "Entropy Coefficient": settings["entropy"],
-            "Network": f"2 x {settings['hidden_size']}",
             "Games per Update": settings["rollout"] // GAME_LENGTH_DAYS,
+            "Network": f"2 x {settings['hidden_size']}",
         }
 
     if algorithm == "a2c":
         return {
+            "Learning Rate": settings["learning_rate"],
             "Gamma": settings["gamma"],
             "Rollout Steps": settings["rollout"],
-            "GAE Lambda": settings["gae_lambda"],
             "Entropy Coefficient": settings["entropy"],
-            "Learning Rate": settings["learning_rate"],
             "Value Coefficient": settings["value_coefficient"],
+            "GAE Lambda": settings["gae_lambda"],
         }
 
     return {
+        "Learning Rate": settings["learning_rate"],
         "Gamma": settings["gamma"],
+        "Rollout Steps": settings["rollout"],
+        "Minibatch": settings["minibatch"],
         "Epochs": settings["epochs"],
         "Clip Range": settings["clip"],
-        "Minibatch": settings["minibatch"],
-        "Rollout Steps": settings["rollout"],
-        "GAE Lambda": settings["gae_lambda"],
-        "Learning Rate": settings["learning_rate"],
         "Entropy Coefficient": settings["entropy"],
+        "GAE Lambda": settings["gae_lambda"],
         "Value Coefficient": settings["value_coefficient"],
     }
 
 
 def metric_columns(card: Scorecard) -> dict[str, str]:
     columns = {
+        "Mean Reward (points)": f"{card['mean_points']:.2f}",
         "Win rate": f"{card['win_rate']:.1%}",
         "Mean cost (bps)": f"{card['mean_cost_bps']:.1f}",
-        "Mean Reward (points)": f"{card['mean_points']:.2f}",
         "Forced-sale rate": f"{card['forced_sale_rate']:.1%}",
         "Invalid actions per game": f"{card['invalid_actions_per_game']:.2f}",
     }
