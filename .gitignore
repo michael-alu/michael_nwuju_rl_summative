@@ -6,3 +6,11 @@ __pycache__/
 .DS_Store
 data/
 archive/
+
+# Early exploratory runs: kept on disk, numbers saved in logs/history/15 and 16
+logs/ppo/quick_*
+models/*/quick_*
+
+# Sweep files kept on disk for the report figures, too large for the repo
+logs/sweep/**/*_episodes.csv
+logs/sweep/**/*_console.log
