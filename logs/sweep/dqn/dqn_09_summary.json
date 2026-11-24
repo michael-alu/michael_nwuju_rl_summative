@@ -1,0 +1,45 @@
+{
+  "algorithm": "dqn",
+  "settings": {
+    "tau": 0.005,
+    "name": "dqn_09",
+    "seed": 0,
+    "gamma": 0.995,
+    "frames": 1000000,
+    "threads": 1,
+    "batch_size": 128,
+    "buffer_size": 100000,
+    "epsilon_end": 0.05,
+    "hidden_size": 128,
+    "reward_scale": 0.1,
+    "warmup_frames": 6000,
+    "epsilon_start": 1.0,
+    "learning_rate": 0.0005,
+    "target_update": "hard",
+    "frames_per_batch": 120,
+    "updates_per_batch": 4,
+    "hard_update_every": 1000,
+    "epsilon_decay_frames": 150000
+  },
+  "held_out": {
+    "games": 500,
+    "mean_points": -24.530578965611202,
+    "mean_cost_bps": 182.985789656112,
+    "win_rate": 0.09,
+    "forced_sale_rate": 0.882,
+    "invalid_actions_per_game": 0.492
+  },
+  "frames": 1000080,
+  "name": "dqn_09",
+  "best_frames": 864000,
+  "validation_best": {
+    "games": 200,
+    "mean_points": -24.69427373685505,
+    "mean_cost_bps": 183.44273736855052,
+    "win_rate": 0.08,
+    "forced_sale_rate": 0.89,
+    "invalid_actions_per_game": 0.47
+  },
+  "episodes": 16668,
+  "seconds": 1848.4
+}
