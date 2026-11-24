@@ -1,0 +1,5 @@
+5-action game, 500 held-out seeds, X = 125 bps
+block_dealer           won  37.6%  forced  44.0%  cost mean  164.9 p50  160.7
+volume_aware_trimmer   won  23.8%  forced  71.6%  cost mean  198.6 p50  158.0
+fair_oracle            won  53.6%  forced  16.6%  cost mean  152.2 p50  121.2
+Step 1 rule: 5-action oracle minus best simple = +16.0% (needs +10%): PASS

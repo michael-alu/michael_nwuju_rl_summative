@@ -1,0 +1,142 @@
+batch   0 frames    2400 episodes  40 mean points   -90.25 entropy 2.284 seconds 3.0
+batch   1 frames    4800 episodes  40 mean points   -83.41 entropy 2.262 seconds 5.7
+batch   2 frames    7200 episodes  40 mean points    -74.7 entropy 2.202 seconds 7.9
+batch   3 frames    9600 episodes  40 mean points   -69.09 entropy 2.136 seconds 10.2
+batch   4 frames   12000 episodes  40 mean points   -61.35 entropy 2.077 seconds 12.7
+batch   5 frames   14400 episodes  40 mean points   -49.72 entropy 2.090 seconds 15.1
+batch   6 frames   16800 episodes  40 mean points   -51.77 entropy 2.021 seconds 17.5
+batch   7 frames   19200 episodes  40 mean points   -43.76 entropy 1.959 seconds 19.8
+batch   8 frames   21600 episodes  40 mean points   -50.16 entropy 1.915 seconds 22.1
+batch   9 frames   24000 episodes  40 mean points   -42.03 entropy 1.825 seconds 24.5
+batch  10 frames   26400 episodes  40 mean points   -48.91 entropy 1.837 seconds 27.2
+batch  11 frames   28800 episodes  40 mean points   -29.25 entropy 1.851 seconds 29.7
+batch  12 frames   31200 episodes  40 mean points   -34.42 entropy 1.823 seconds 32.0
+batch  13 frames   33600 episodes  40 mean points   -33.64 entropy 1.824 seconds 34.3
+batch  14 frames   36000 episodes  40 mean points   -41.86 entropy 1.774 seconds 36.7
+batch  15 frames   38400 episodes  40 mean points   -38.19 entropy 1.788 seconds 39.0
+batch  16 frames   40800 episodes  40 mean points   -41.44 entropy 1.765 seconds 41.3
+batch  17 frames   43200 episodes  40 mean points   -37.47 entropy 1.741 seconds 43.8
+batch  18 frames   45600 episodes  40 mean points   -36.97 entropy 1.759 seconds 46.1
+batch  19 frames   48000 episodes  40 mean points   -28.13 entropy 1.694 seconds 48.4
+batch  20 frames   50400 episodes  40 mean points    -34.5 entropy 1.586 seconds 50.4
+batch  21 frames   52800 episodes  40 mean points   -27.05 entropy 1.599 seconds 52.6
+batch  22 frames   55200 episodes  40 mean points   -21.15 entropy 1.541 seconds 54.8
+batch  23 frames   57600 episodes  40 mean points   -35.64 entropy 1.540 seconds 56.9
+batch  24 frames   60000 episodes  40 mean points   -29.87 entropy 1.496 seconds 59.3
+batch  25 frames   62400 episodes  40 mean points   -24.12 entropy 1.497 seconds 61.5
+batch  26 frames   64800 episodes  40 mean points   -27.65 entropy 1.425 seconds 63.6
+batch  27 frames   67200 episodes  40 mean points   -18.98 entropy 1.423 seconds 65.8
+batch  28 frames   69600 episodes  40 mean points   -26.88 entropy 1.431 seconds 67.8
+batch  29 frames   72000 episodes  40 mean points   -24.33 entropy 1.391 seconds 70.0
+batch  30 frames   74400 episodes  40 mean points   -22.93 entropy 1.413 seconds 72.4
+batch  31 frames   76800 episodes  40 mean points   -28.06 entropy 1.475 seconds 74.5
+batch  32 frames   79200 episodes  40 mean points   -24.66 entropy 1.484 seconds 76.7
+batch  33 frames   81600 episodes  40 mean points   -38.09 entropy 1.457 seconds 78.8
+batch  34 frames   84000 episodes  40 mean points   -12.37 entropy 1.434 seconds 81.0
+batch  35 frames   86400 episodes  40 mean points   -18.02 entropy 1.483 seconds 83.1
+batch  36 frames   88800 episodes  40 mean points   -25.05 entropy 1.409 seconds 85.2
+batch  37 frames   91200 episodes  40 mean points   -27.73 entropy 1.284 seconds 87.7
+batch  38 frames   93600 episodes  40 mean points   -19.97 entropy 1.287 seconds 90.2
+batch  39 frames   96000 episodes  40 mean points   -28.58 entropy 1.239 seconds 92.3
+batch  40 frames   98400 episodes  40 mean points    -20.6 entropy 1.286 seconds 94.7
+batch  41 frames  100800 episodes  40 mean points   -33.95 entropy 1.271 seconds 96.8
+batch  42 frames  103200 episodes  40 mean points   -18.11 entropy 1.217 seconds 99.4
+batch  43 frames  105600 episodes  40 mean points   -11.31 entropy 1.185 seconds 101.8
+batch  44 frames  108000 episodes  40 mean points   -34.55 entropy 1.188 seconds 104.2
+batch  45 frames  110400 episodes  40 mean points   -20.59 entropy 1.235 seconds 106.4
+batch  46 frames  112800 episodes  40 mean points    -8.81 entropy 1.269 seconds 108.6
+batch  47 frames  115200 episodes  40 mean points   -24.02 entropy 1.277 seconds 110.8
+batch  48 frames  117600 episodes  40 mean points   -13.36 entropy 1.304 seconds 112.9
+batch  49 frames  120000 episodes  40 mean points   -30.73 entropy 1.205 seconds 115.0
+batch  50 frames  122400 episodes  40 mean points   -15.78 entropy 1.114 seconds 117.1
+batch  51 frames  124800 episodes  40 mean points     2.53 entropy 1.150 seconds 119.3
+batch  52 frames  127200 episodes  40 mean points   -27.53 entropy 1.109 seconds 121.4
+batch  53 frames  129600 episodes  40 mean points    -5.57 entropy 1.127 seconds 123.5
+batch  54 frames  132000 episodes  40 mean points   -21.72 entropy 1.127 seconds 125.7
+batch  55 frames  134400 episodes  40 mean points   -14.75 entropy 1.107 seconds 127.8
+batch  56 frames  136800 episodes  40 mean points   -20.27 entropy 1.185 seconds 130.0
+batch  57 frames  139200 episodes  40 mean points   -14.56 entropy 1.212 seconds 132.1
+batch  58 frames  141600 episodes  40 mean points    -2.53 entropy 1.300 seconds 134.2
+batch  59 frames  144000 episodes  40 mean points    -2.35 entropy 1.373 seconds 136.4
+batch  60 frames  146400 episodes  40 mean points   -17.74 entropy 1.272 seconds 138.4
+batch  61 frames  148800 episodes  40 mean points   -13.58 entropy 1.233 seconds 140.6
+batch  62 frames  151200 episodes  40 mean points   -28.32 entropy 1.156 seconds 142.7
+batch  63 frames  153600 episodes  40 mean points   -15.21 entropy 1.152 seconds 144.8
+batch  64 frames  156000 episodes  40 mean points   -18.62 entropy 1.092 seconds 147.3
+batch  65 frames  158400 episodes  40 mean points   -11.92 entropy 1.135 seconds 149.5
+batch  66 frames  160800 episodes  40 mean points    -6.18 entropy 1.198 seconds 151.6
+batch  67 frames  163200 episodes  40 mean points     1.47 entropy 1.222 seconds 153.7
+batch  68 frames  165600 episodes  40 mean points   -13.38 entropy 1.295 seconds 155.9
+batch  69 frames  168000 episodes  40 mean points   -28.48 entropy 1.342 seconds 158.1
+batch  70 frames  170400 episodes  40 mean points     -8.2 entropy 1.322 seconds 160.5
+batch  71 frames  172800 episodes  40 mean points   -24.09 entropy 1.285 seconds 162.7
+batch  72 frames  175200 episodes  40 mean points    -6.87 entropy 1.279 seconds 165.1
+batch  73 frames  177600 episodes  40 mean points     7.94 entropy 1.307 seconds 167.2
+batch  74 frames  180000 episodes  40 mean points     4.21 entropy 1.255 seconds 169.7
+batch  75 frames  182400 episodes  40 mean points   -31.39 entropy 1.242 seconds 171.9
+batch  76 frames  184800 episodes  40 mean points   -19.63 entropy 1.240 seconds 174.2
+batch  77 frames  187200 episodes  40 mean points    -8.43 entropy 1.219 seconds 176.4
+batch  78 frames  189600 episodes  40 mean points   -15.13 entropy 1.288 seconds 178.5
+batch  79 frames  192000 episodes  40 mean points    -3.58 entropy 1.331 seconds 180.7
+batch  80 frames  194400 episodes  40 mean points   -17.33 entropy 1.419 seconds 182.9
+batch  81 frames  196800 episodes  40 mean points   -18.31 entropy 1.539 seconds 185.1
+batch  82 frames  199200 episodes  40 mean points   -28.03 entropy 1.508 seconds 187.3
+batch  83 frames  201600 episodes  40 mean points   -40.55 entropy 1.607 seconds 189.5
+batch  84 frames  204000 episodes  40 mean points   -16.45 entropy 1.647 seconds 191.7
+batch  85 frames  206400 episodes  40 mean points   -27.62 entropy 1.615 seconds 193.9
+batch  86 frames  208800 episodes  40 mean points   -28.96 entropy 1.647 seconds 196.1
+batch  87 frames  211200 episodes  40 mean points   -44.42 entropy 1.722 seconds 198.3
+batch  88 frames  213600 episodes  40 mean points    -9.82 entropy 1.732 seconds 200.6
+batch  89 frames  216000 episodes  40 mean points   -10.31 entropy 1.725 seconds 202.8
+batch  90 frames  218400 episodes  40 mean points    11.47 entropy 1.732 seconds 205.0
+batch  91 frames  220800 episodes  40 mean points   -16.38 entropy 1.738 seconds 207.1
+batch  92 frames  223200 episodes  40 mean points   -33.63 entropy 1.769 seconds 209.5
+batch  93 frames  225600 episodes  40 mean points   -22.77 entropy 1.751 seconds 211.6
+batch  94 frames  228000 episodes  40 mean points     9.67 entropy 1.727 seconds 213.9
+batch  95 frames  230400 episodes  40 mean points   -22.76 entropy 1.708 seconds 216.1
+batch  96 frames  232800 episodes  40 mean points    -30.4 entropy 1.772 seconds 218.3
+batch  97 frames  235200 episodes  40 mean points   -78.11 entropy 1.690 seconds 220.5
+batch  98 frames  237600 episodes  40 mean points   -31.28 entropy 1.767 seconds 222.8
+batch  99 frames  240000 episodes  40 mean points   -52.82 entropy 1.708 seconds 225.4
+batch 100 frames  242400 episodes  40 mean points    -5.26 entropy 1.746 seconds 227.8
+batch 101 frames  244800 episodes  40 mean points   -27.61 entropy 1.690 seconds 230.3
+batch 102 frames  247200 episodes  40 mean points     2.64 entropy 1.650 seconds 232.4
+batch 103 frames  249600 episodes  40 mean points   -11.79 entropy 1.682 seconds 234.7
+batch 104 frames  252000 episodes  40 mean points   -52.63 entropy 1.674 seconds 236.8
+batch 105 frames  254400 episodes  40 mean points   -18.66 entropy 1.653 seconds 238.9
+batch 106 frames  256800 episodes  40 mean points   -26.61 entropy 1.627 seconds 241.1
+batch 107 frames  259200 episodes  40 mean points   -15.64 entropy 1.560 seconds 243.2
+batch 108 frames  261600 episodes  40 mean points   -20.62 entropy 1.587 seconds 245.4
+batch 109 frames  264000 episodes  40 mean points   -16.46 entropy 1.542 seconds 247.5
+batch 110 frames  266400 episodes  40 mean points   -13.09 entropy 1.582 seconds 249.6
+batch 111 frames  268800 episodes  40 mean points    -58.9 entropy 1.634 seconds 251.8
+batch 112 frames  271200 episodes  40 mean points    -44.2 entropy 1.565 seconds 253.8
+batch 113 frames  273600 episodes  40 mean points    -4.72 entropy 1.500 seconds 256.0
+batch 114 frames  276000 episodes  40 mean points    -8.46 entropy 1.518 seconds 258.2
+batch 115 frames  278400 episodes  40 mean points   -19.88 entropy 1.556 seconds 260.4
+batch 116 frames  280800 episodes  40 mean points    -18.1 entropy 1.575 seconds 262.7
+batch 117 frames  283200 episodes  40 mean points   -10.62 entropy 1.599 seconds 264.8
+batch 118 frames  285600 episodes  40 mean points   -26.33 entropy 1.576 seconds 267.0
+batch 119 frames  288000 episodes  40 mean points   -34.53 entropy 1.520 seconds 269.3
+batch 120 frames  290400 episodes  40 mean points   -38.31 entropy 1.440 seconds 271.7
+batch 121 frames  292800 episodes  40 mean points    10.18 entropy 1.485 seconds 274.3
+batch 122 frames  295200 episodes  40 mean points   -15.39 entropy 1.588 seconds 276.7
+batch 123 frames  297600 episodes  40 mean points    -36.8 entropy 1.502 seconds 278.9
+batch 124 frames  300000 episodes  40 mean points   -10.68 entropy 1.430 seconds 281.0
+
+PPO sanity run (300000 frames) vs all-T-bills, 500 held-out seeds
+policy                won   safe   lost  mean return  total pts  invalid/game    forced N    fees N
+ppo                  4.8%  94.8%   0.4%        2.49%      -20.2           0.0           0     2,385
+all_tbills           0.0% 100.0%   0.0%        3.10%      -15.9           0.0           0     1,069
+
+Greedy action mix over 100 games (all days | last 5 days):
+  hold                        86.3% |  97.2%
+  buy_tbills                  12.5% |   0.0%
+  sell_tbills                  1.0% |   2.8%
+  buy_banks                    0.2% |   0.0%
+  sell_banks                   0.0% |   0.0%
+  buy_small_caps               0.0% |   0.0%
+  sell_small_caps              0.0% |   0.0%
+  switch_small_caps_to_banks   0.0% |   0.0%
+  switch_banks_to_small_caps   0.0% |   0.0%
+  call_big_buyer               0.0% |   0.0%

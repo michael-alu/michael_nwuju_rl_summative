@@ -1,0 +1,14 @@
+
+Normal market, 500 held-out seeds, X = 125 bps
+  block_dealer: won 37.6%, cost mean 164.9 bps
+  PPO seed 0: won 46.6%, forced 44.0%, cost mean 145.7 p50 114.4 bps
+  PPO seed 1: won 45.6%, forced 48.6%, cost mean 143.3 p50 109.8 bps
+  PPO seed 2: won 43.8%, forced 49.2%, cost mean 146.8 p50 116.5 bps
+  PPO mean of 3 seeds: 45.3% (std 1.2%) vs block_dealer 37.6%: BEATS
+
+Hard market, 500 held-out seeds, X = 125 bps
+  block_dealer: won 12.0%, cost mean 255.4 bps
+  PPO seed 0: won 16.2%, forced 72.2%, cost mean 213.5 p50 200.7 bps
+  PPO seed 1: won 15.4%, forced 75.6%, cost mean 213.4 p50 198.9 bps
+  PPO seed 2: won 14.8%, forced 75.8%, cost mean 216.0 p50 199.9 bps
+  PPO mean of 3 seeds: 15.5% (std 0.6%) vs block_dealer 12.0%: BEATS

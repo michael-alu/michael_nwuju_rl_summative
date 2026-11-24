@@ -1,0 +1,51 @@
+
+Default market, 500 held-out seeds
+policy                won   safe   lost  mean return  total pts  invalid/game    forced N    fees N
+all_tbills           0.0% 100.0%   0.0%        3.62%      -14.6           0.0           0     1,169
+sixty_forty         59.8%  26.4%  13.8%        7.23%       42.2           0.0           0    36,920
+buy_and_hold        55.4%  21.4%  23.2%        7.90%       46.1           0.0      18,674    29,960
+random              16.6%  26.4%  57.0%        0.09%      -85.7          34.9           0   312,142
+trusts_the_board    42.2%  26.6%  31.2%        5.78%       18.9           0.0         857    57,485
+all_stocks_max      67.2%   5.6%  27.2%       22.92%      200.4           0.0      35,126   109,363
+oracle              63.0%  12.2%  24.8%        8.88%       58.4           0.3           0   174,467
+fair_oracle         61.2%  24.2%  14.6%       11.03%       80.5           0.2         120   127,316
+smart_rule          59.4%  22.0%  18.6%        8.52%       53.8           0.6       2,020    77,518
+
+Step 3 (baseline checks):
+  a. fair_oracle win rate 61.2% - sixty_forty 59.8% = +1.4% (needs >= +10%): FAIL
+  a. fair_oracle win rate 61.2% - all_stocks_max 67.2% = -6.0% (needs >= +10%): FAIL
+  a. fair_oracle win rate 61.2% - all_tbills 0.0% = +61.2% (needs >= +10%): PASS
+  b. smart_rule win rate 59.4% vs all_stocks_max 67.2%: FAIL
+
+Daily points (all days pooled) and total points per game, end score excluded
+policy              day min  day p5 day p50 day p95  day max  game mean  game std  game p5 game p95
+all_tbills             -0.4    -0.2   -0.00    -0.0     -0.0       -2.1       0.1     -2.2     -1.9
+sixty_forty           -47.6    -7.3   -0.03     8.3     35.1       34.0      82.5    -72.6    188.1
+buy_and_hold          -84.3    -9.4    0.03    11.2     64.3       40.7     122.9    -86.7    296.6
+random                -51.6    -6.4   -0.30     6.0     61.8      -37.4      65.8   -121.9     67.6
+trusts_the_board      -61.5    -8.8   -0.30    10.2     64.4       19.5     108.5    -89.1    254.4
+all_stocks_max       -156.7   -33.1    0.84    38.1    204.1      191.1     353.3   -246.2    869.0
+oracle                -72.7   -15.6    0.02    17.2     75.3       50.6     145.8   -166.7    326.3
+fair_oracle           -52.8   -12.1   -0.00    14.6     67.3       72.1     141.3    -88.1    386.6
+smart_rule            -64.2   -11.6   -0.00    13.2     65.9       46.9     118.5   -115.7    266.8
+
+Recommended end scores (rule: Won = half the std of 60/40 total points, Played safe = -Won/2, Lost = -Won)
+60/40 total points std = 82.5 -> Won +41, Played safe -20.5, Lost -41
+
+Hard market (longer droughts, more storms, bigger requests), 500 held-out seeds
+policy                won   safe   lost  mean return  total pts  invalid/game    forced N    fees N
+all_tbills           0.0% 100.0%   0.0%        3.01%      -14.6           0.0           0     1,404
+sixty_forty         62.4%  23.4%  14.2%        6.07%       37.6           0.0       3,588    29,672
+buy_and_hold        55.4%  22.0%  22.6%        6.31%       36.4           0.0      84,653    22,487
+random              17.0%  29.0%  54.0%        0.28%      -78.5          36.0         345   252,995
+trusts_the_board    37.8%  27.8%  34.4%        4.11%        6.2           0.0      24,675    49,936
+all_stocks_max      68.8%   4.0%  27.2%       20.79%      186.0           0.0     762,256   128,213
+oracle              65.0%   8.2%  26.8%        7.82%       54.5           0.2         140   148,683
+fair_oracle         65.4%  19.6%  15.0%        8.99%       67.8           0.2       4,015   115,793
+smart_rule          60.2%  23.8%  16.0%        6.55%       41.0           0.3      19,303    50,875
+
+Step 3 (baseline checks):
+  a. fair_oracle win rate 65.4% - sixty_forty 62.4% = +3.0% (needs >= +10%): FAIL
+  a. fair_oracle win rate 65.4% - all_stocks_max 68.8% = -3.4% (needs >= +10%): FAIL
+  a. fair_oracle win rate 65.4% - all_tbills 0.0% = +65.4% (needs >= +10%): PASS
+  b. smart_rule win rate 60.2% vs all_stocks_max 68.8%: FAIL

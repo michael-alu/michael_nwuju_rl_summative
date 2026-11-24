@@ -1,0 +1,35 @@
+X = 150 bps (best simple baseline: volume_aware_trimmer, 37.2% wins)
+End scores (half-std rule): std of volume_aware_trimmer total points = 14.9 -> Won +7, Lost -7
+
+Normal market, 500 held-out seeds (Won = no forced sale and cost below 150 bps)
+policy                    won  lost: forced  lost: costly  cost bps mean     p50   points  invalid
+liquidity_ladder         0.0%        100.0%          0.0%          238.7   222.6    -23.9      0.0
+pro_rata                 0.0%        100.0%          0.0%          232.2   216.9    -23.2      0.0
+steady_trimmer           1.0%         99.0%          0.0%          218.0   205.6    -21.8      0.0
+volume_aware_trimmer    37.2%         52.6%         10.2%          175.3   134.3    -17.5      0.0
+random                   0.0%         99.8%          0.2%          525.7   520.9    -64.5     11.9
+trusts_the_board         8.8%         91.2%          0.0%          200.7   179.2    -20.1      0.0
+fair_oracle             75.0%         12.6%         12.4%          116.9   102.7    -11.7      0.0
+
+Hard market, 500 held-out seeds (Won = no forced sale and cost below 150 bps)
+policy                    won  lost: forced  lost: costly  cost bps mean     p50   points  invalid
+liquidity_ladder         0.0%        100.0%          0.0%          402.3   345.4    -40.2      0.0
+pro_rata                 0.0%        100.0%          0.0%          378.7   348.3    -37.9      0.0
+steady_trimmer           0.0%        100.0%          0.0%          388.4   334.7    -38.8      0.0
+volume_aware_trimmer    13.8%         73.6%         12.6%          337.9   223.3    -33.8      0.0
+random                   0.0%         99.8%          0.2%          629.0   603.6    -75.1     12.2
+trusts_the_board         1.2%         98.8%          0.0%          376.7   319.0    -37.7      0.0
+fair_oracle             36.6%         31.2%         32.2%          212.6   187.8    -21.3      0.0
+
+Win rate by situation (X = 150 bps):
+situation                          games      liquidity_ladder              pro_rata        steady_trimmer  volume_aware_trimmer      trusts_the_board
+light redemptions (35% or less)      272                  0.0%                  0.0%                  1.8%                 55.1%                 13.2%
+heavy redemptions (over 35%)         228                  0.0%                  0.0%                  0.0%                 15.8%                  3.5%
+no drought day in the game           164                  0.0%                  0.0%                  3.0%                 53.7%                 17.1%
+drought during the game              336                  0.0%                  0.0%                  0.0%                 29.2%                  4.8%
+calm start                           391                  0.0%                  0.0%                  1.3%                 37.6%                  9.5%
+stormy start                         109                  0.0%                  0.0%                  0.0%                 35.8%                  6.4%
+
+Pass mark:
+  a. fair_oracle 75.0% vs best simple volume_aware_trimmer 37.2%: +37.8% (needs +10%): PASS
+  b. two baselines each leading in different situations by 5%+: FAIL

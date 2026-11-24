@@ -1,0 +1,27 @@
+
+=== replay_newest: 1681 training games, 449 held-out games
+Stocks beat T-bills: training 58.0%, held out 97.1%
+10-day signal: held-out AUC 0.736
+20-day signal: held-out AUC 0.709
+Step 2 (replay_newest): 20-day AUC >= 0.6: PASS; held-out stocks-win share in 20%-80%: FAIL
+Separate 'stocks lose' stretches in held-out data: 4
+  starts 2024-10-25 to 2024-10-28 (2 overlapping windows, about 1 non-overlapping)
+  starts 2025-07-17 to 2025-07-21 (3 overlapping windows, about 1 non-overlapping)
+  starts 2026-02-17 to 2026-02-17 (1 overlapping windows, about 1 non-overlapping)
+  starts 2026-02-20 to 2026-03-02 (7 overlapping windows, about 1 non-overlapping)
+
+=== replay_blocked: 849 training games, 448 held-out games
+Stocks beat T-bills: training 67.1%, held out 73.9%
+10-day signal: held-out AUC 0.690
+20-day signal: held-out AUC 0.747
+Step 2 (replay_blocked): 20-day AUC >= 0.6: PASS; held-out stocks-win share in 20%-80%: PASS
+Separate 'stocks lose' stretches in held-out data: 3
+  starts 2017-12-29 to 2018-06-11 (112 overlapping windows, about 1 non-overlapping)
+  starts 2022-07-18 to 2022-07-20 (3 overlapping windows, about 1 non-overlapping)
+  starts 2024-10-25 to 2024-10-28 (2 overlapping windows, about 1 non-overlapping)
+
+=== modes: 2000 training games, 500 held-out games
+Stocks beat T-bills: training 79.0%, held out 81.4%
+10-day signal: held-out AUC 0.646
+20-day signal: held-out AUC 0.713
+Step 2 (modes): 20-day AUC >= 0.6: PASS; held-out stocks-win share in 20%-80%: FAIL

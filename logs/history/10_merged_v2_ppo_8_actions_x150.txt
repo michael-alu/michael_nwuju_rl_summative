@@ -1,0 +1,21 @@
+
+Normal market, 500 held-out seeds (Won = no forced sale and cost below 150 bps)
+policy                    won  lost: forced  lost: costly  cost bps mean     p50   points  invalid
+volume_aware_trimmer    37.2%         52.6%         10.2%          175.3   134.3    -19.3      0.0
+ppo                     54.2%         32.4%         13.4%          133.8   119.4    -12.9      0.1
+  c. PPO win rate minus best simple baseline: +17.0%: PASS
+
+Hard market, 500 held-out seeds (Won = no forced sale and cost below 150 bps)
+policy                    won  lost: forced  lost: costly  cost bps mean     p50   points  invalid
+volume_aware_trimmer    13.8%         73.6%         12.6%          337.9   223.3    -38.9      0.0
+ppo                     21.6%         53.8%         24.6%          214.1   195.5    -26.0      0.6
+  c. PPO win rate minus best simple baseline: +7.8%: PASS
+
+What PPO does (200 held-out games, share of days):
+  all days                               (12000 days): wait 51%, sell_small_caps_large 19%, sell_small_caps_steady 12%, sell_banks_small 6%
+  over the small-cap limit               (1383 days): sell_small_caps_large 78%, wait 6%, call_big_buyer 5%, sell_small_caps_steady 4%
+  after a busy day (volume >= normal)    (3545 days): wait 43%, sell_small_caps_large 28%, sell_small_caps_steady 13%, sell_banks_small 8%
+  big buyer offered                      (758 days): wait 22%, sell_small_caps_large 21%, sell_small_caps_small 16%, sell_small_caps_steady 15%
+  request due within 5 days              (4043 days): wait 41%, sell_small_caps_large 29%, sell_banks_small 14%, sell_small_caps_small 5%
+
+Invalid actions per game: 0.65 (hard market)

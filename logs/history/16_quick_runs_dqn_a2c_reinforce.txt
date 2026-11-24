@@ -1,0 +1,27 @@
+500 held-out seeds, X = 125 bps
+random                             won   3.8%  forced  84.6%  cost mean  247.6 p50  226.3 bps  invalid/game 20.6
+quick_dqn_best                     won  12.6%  forced  70.4%  cost mean  178.2 p50  178.8 bps  invalid/game 0.0
+    all days                   (6000 days): Wait 64%, Sell small-cap shares 19%, Sell bank shares 12%
+    payout due within 5 days   (2008 days): Wait 71%, Sell bank shares 13%, Sell small-cap shares 8%
+    over the small-cap limit   (1242 days): Wait 47%, Sell small-cap shares 47%, Call a big buyer 4%
+    big buyer offered          (399 days): Wait 37%, Call a big buyer 31%, Sell bank shares 20%
+quick_a2c_v3_best                  won   0.0%  forced 100.0%  cost mean  240.5 p50  229.0 bps  invalid/game 0.0
+    all days                   (6000 days): Sell small-cap shares 100%
+    payout due within 5 days   (2008 days): Sell small-cap shares 100%
+    over the small-cap limit   (2371 days): Sell small-cap shares 100%
+    big buyer offered          (399 days): Sell small-cap shares 100%
+quick_a2c_v3_final                 won   0.0%  forced 100.0%  cost mean  240.5 p50  229.0 bps  invalid/game 0.0
+    all days                   (6000 days): Sell small-cap shares 100%
+    payout due within 5 days   (2008 days): Sell small-cap shares 100%
+    over the small-cap limit   (2371 days): Sell small-cap shares 100%
+    big buyer offered          (399 days): Sell small-cap shares 100%
+quick_reinforce_v3_best            won   4.8%  forced  94.8%  cost mean  242.6 p50  225.8 bps  invalid/game 10.6
+    all days                   (6000 days): Wait 58%, Sell bank shares 19%, Call a big buyer 19%
+    payout due within 5 days   (2008 days): Wait 64%, Call a big buyer 21%, Sell bank shares 8%
+    over the small-cap limit   (2328 days): Call a big buyer 48%, Wait 36%, Sell bank shares 14%
+    big buyer offered          (399 days): Wait 56%, Call a big buyer 20%, Sell bank shares 17%
+quick_reinforce_v3_final           won   0.0%  forced 100.0%  cost mean  185.2 p50  166.4 bps  invalid/game 15.2
+    all days                   (6000 days): Wait 71%, Call a big buyer 28%, Sell small-cap shares 0%
+    payout due within 5 days   (2008 days): Wait 76%, Call a big buyer 24%, Sell bank shares 0%
+    over the small-cap limit   (1400 days): Wait 74%, Call a big buyer 24%, Sell small-cap shares 2%
+    big buyer offered          (399 days): Wait 73%, Call a big buyer 27%
