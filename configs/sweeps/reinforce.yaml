@@ -1,0 +1,12 @@
+# REINFORCE sweep: 10 configs, 1,000,000 frames each. Rollout = whole games per update x 60 days.
+# Advantages are Monte-Carlo returns minus the value baseline, normalised per batch; baseline "off" uses no critic.
+- {name: reinforce_01, learning_rate: 0.0001, rollout: 3000, entropy: 0.01, baseline: on}
+- {name: reinforce_02, learning_rate: 0.0003, rollout: 3000, entropy: 0.01, baseline: on}
+- {name: reinforce_03, learning_rate: 0.001,  rollout: 3000, entropy: 0.01, baseline: on}
+- {name: reinforce_04, learning_rate: 0.003,  rollout: 3000, entropy: 0.01, baseline: on}
+- {name: reinforce_05, learning_rate: 0.0003, rollout: 600,  entropy: 0.01, baseline: on}
+- {name: reinforce_06, learning_rate: 0.0003, rollout: 6000, entropy: 0.01, baseline: on}
+- {name: reinforce_07, learning_rate: 0.0003, rollout: 3000, entropy: 0.0,  baseline: on}
+- {name: reinforce_08, learning_rate: 0.0003, rollout: 3000, entropy: 0.03, baseline: on}
+- {name: reinforce_09, learning_rate: 0.0003, rollout: 3000, entropy: 0.01, baseline: off}
+- {name: reinforce_10, learning_rate: 0.0003, rollout: 3000, entropy: 0.01, baseline: on, gamma: 0.99}

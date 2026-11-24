@@ -1,0 +1,12 @@
+# PPO sweep: 10 configs, 1,000,000 frames each, same frozen game, validation seeds for checkpoint choice.
+# Shared defaults: gamma 0.995, two layers of 128, reward scale 0.1, value coefficient 0.5.
+- {name: ppo_01, learning_rate: 0.0001, rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_02, learning_rate: 0.0003, rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_03, learning_rate: 0.001,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_04, learning_rate: 0.002,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_05, learning_rate: 0.003,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_06, learning_rate: 0.001,  rollout: 6000, minibatch: 600, epochs: 4, clip: 0.2, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_07, learning_rate: 0.001,  rollout: 2400, minibatch: 240, epochs: 8, clip: 0.1, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_08, learning_rate: 0.001,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.3, entropy: 0.01,  gae_lambda: 0.95}
+- {name: ppo_09, learning_rate: 0.001,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.003, gae_lambda: 0.90}
+- {name: ppo_10, learning_rate: 0.001,  rollout: 2400, minibatch: 240, epochs: 4, clip: 0.2, entropy: 0.03,  gae_lambda: 0.98, value_coefficient: 1.0}

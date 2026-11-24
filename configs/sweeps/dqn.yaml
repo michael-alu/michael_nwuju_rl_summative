@@ -1,0 +1,11 @@
+# DQN sweep: 10 configs, 1,000,000 frames each. Shared: gamma 0.995 unless set, 4 updates per 120 frames, smooth L1 TD loss.
+- {name: dqn_01, learning_rate: 0.0001, batch_size: 128, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_02, learning_rate: 0.0003, batch_size: 128, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_03, learning_rate: 0.0005, batch_size: 128, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_04, learning_rate: 0.001,  batch_size: 128, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_05, learning_rate: 0.003,  batch_size: 256, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_06, learning_rate: 0.0005, batch_size: 64,  buffer_size: 20000,  epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_07, learning_rate: 0.0005, batch_size: 256, buffer_size: 300000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_08, learning_rate: 0.0005, batch_size: 128, buffer_size: 100000, epsilon_end: 0.01, epsilon_decay_frames: 400000, target_update: soft, tau: 0.005, hidden_size: 128}
+- {name: dqn_09, learning_rate: 0.0005, batch_size: 128, buffer_size: 100000, epsilon_end: 0.05, epsilon_decay_frames: 150000, target_update: hard, hard_update_every: 1000, hidden_size: 128}
+- {name: dqn_10, learning_rate: 0.0005, batch_size: 128, buffer_size: 100000, epsilon_end: 0.10, epsilon_decay_frames: 50000,  target_update: soft, tau: 0.02, hidden_size: 256, gamma: 0.99}
