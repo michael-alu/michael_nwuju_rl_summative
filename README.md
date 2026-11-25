@@ -20,6 +20,30 @@ uv run main.py design-checks
 uv run pytest
 ```
 
+## Results
+
+Four TorchRL algorithms, 10 hyperparameter settings each, 1,000,000 frames per run (`configs/sweeps/`). Each run keeps the checkpoint with the best win rate on 200 validation games, then is scored once on 500 held-out games that no choice was ever made on, and on 500 games of a harder market it never trained on (`configs/market_hard.yaml`). Best run of each method, from `report_tables/generalization.md`:
+
+| Player | Normal: win rate | Normal: mean points | Normal: cost (bps) | Hard: win rate | Hard: cost (bps) |
+|---|---|---|---|---|---|
+| PPO (ppo_10) | 49.0% | -14.95 | 145.6 | 18.0% | 211.2 |
+| DQN (dqn_05) | 13.0% | -43.59 | 175.6 | 7.4% | 254.7 |
+| REINFORCE (reinforce_03) | 10.2% | -37.34 | 215.0 | 1.0% | 308.9 |
+| A2C (a2c_10) | 0.0% | -27.39 | 202.0 | 0.0% | 291.4 |
+| Best simple rule (block_dealer) | 37.6% | -18.29 | 165.6 | 11.8% | 257.7 |
+| Perfect foresight (cheats: sees the future) | 53.6% | -14.71 | 152.2 | 21.6% | 238.7 |
+
+PPO is the only method that beats the best simple rule, and it keeps that lead in the hard market. No A2C run ever won: it never learned to raise cash before a payout, so every game ended in a forced sale (`logs/history/18_a2c_vs_ppo_action_mix.txt`).
+
+Where everything comes from (no number is typed by hand):
+
+- `report_tables/<algorithm>.csv` and `.md`: one row per run, settings and held-out results (`uv run main.py sweep-report`)
+- `figures/fig_*.png`: cumulative rewards, training stability (DQN loss, policy entropy), validation win rate, all 40 runs (`uv run python scripts/make_figures.py`, which also writes `report_tables/convergence.*`)
+- `report_tables/generalization.*`: best models on the normal and hard markets (`uv run python scripts/generalization.py`)
+- `logs/sweep/<algorithm>/`: each run's summary and training curve; `models/pg/` and `models/dqn/`: each run's best and final weights
+
+To run the whole sweep again: `uv run main.py sweep --workers 6` (40 runs, about 4 hours 20 minutes on 6 CPU workers; resumable, `--status` shows progress).
+
 ## Watch the agent
 
 ```
@@ -110,7 +134,8 @@ How models are saved and loaded (the serialization path) is described in `docs/E
 - `training/sweep.py`, `training/sweep_report.py`: the hyperparameter sweep and its report tables
 - `notebooks/colab_sweep.ipynb`: run a slice of the sweep on Colab
 - `configs/`: frozen game settings, hard market, calibration summary, proposed sweep configs (`configs/sweeps/`)
-- `scripts/`: calibration, design checks, slice sizing, agent evaluation, agents-vs-baselines tables, determinism check
+- `scripts/`: calibration, design checks, slice sizing, agent evaluation, agents-vs-baselines tables, figures, generalization test, determinism check
 - `docs/`: environment spec, assumptions, design history
+- `logs/sweep/`, `models/`: the 40 sweep runs (summaries, training curves, weights); `logs/history/`: the saved outputs `docs/HISTORY.md` cites
+- `report_tables/`, `figures/`: every table and figure in the report, generated from the logs
 
-Work in progress: the hyperparameter sweep is running; figures and the report come next.
