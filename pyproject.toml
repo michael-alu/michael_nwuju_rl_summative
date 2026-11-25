@@ -1,7 +1,7 @@
 [project]
 name = "thinbook"
 version = "0.1.0"
-description = "ThinBook: learning to sell a large block in a thin African stock market with reinforcement learning (DQN, REINFORCE, A2C, PPO in TorchRL)."
+description = "ThinBook Pension: a reinforcement learning game where an agent runs a Nigerian pension fund through a thin, stale-priced stock market (DQN, REINFORCE, A2C and PPO with TorchRL)."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
