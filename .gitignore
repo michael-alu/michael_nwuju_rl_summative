@@ -13,6 +13,11 @@ models/*/quick_*
 
 # Sweep files kept on disk for the report figures, too large for the repo
 logs/sweep/**/*_episodes.csv
+# except the best run of each method, which scripts/make_figures.py plots
+!logs/sweep/ppo/ppo_10_episodes.csv
+!logs/sweep/dqn/dqn_05_episodes.csv
+!logs/sweep/a2c/a2c_10_episodes.csv
+!logs/sweep/reinforce/reinforce_03_episodes.csv
 logs/sweep/**/*_console.log
 
 # Report documents (the course template and the built report) stay local
