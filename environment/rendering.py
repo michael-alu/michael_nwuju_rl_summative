@@ -11,7 +11,7 @@ Shows ThinBook Pension games to a person: a terminal view and a three.js browser
 
 The server only reads the env (to_json_state and the info dict); it never changes the game.
 
-Run from the project root: uv run play.py --player ppo --seed 100000 --speed 5
+Run from the project root: uv run play.py --player ppo --seed 100000 --speed slow
 """
 
 import argparse
@@ -34,6 +34,7 @@ from classes.game_session import GameSession
 from classes.perfect_foresight_planner import PerfectForesightPlanner
 from classes.policy import Policy
 from classes.random_policy import RandomPolicy
+from classes.thin_book_pension_env import ThinBookPensionEnv
 from classes.torch_policy import TorchPolicy
 from custom_types.act_request import ActRequest
 from custom_types.act_response import ActResponse
@@ -41,6 +42,7 @@ from custom_types.day_message import DayMessage
 from custom_types.episode_log import EpisodeLog
 from custom_types.episode_request import EpisodeRequest
 from custom_types.game_meta import GameMeta
+from custom_types.game_preview import GamePreview
 from custom_types.health_response import HealthResponse
 from custom_types.json_state import JsonState
 from custom_types.market_config import MarketConfig
@@ -48,7 +50,7 @@ from custom_types.meta_message import MetaMessage
 from custom_types.model_entry import ModelEntry
 from custom_types.models_response import ModelsResponse
 from custom_types.step_info import StepInfo
-from environment.custom_env import ACTION_NAMES, OBSERVATION_NAMES, load_config, load_hard_config
+from environment.custom_env import ACTION_NAMES, OBSERVATION_NAMES, WARM_UP_DAYS, load_config, load_hard_config
 from environment.model_registry import best_agent, list_players, load_network
 
 DAY_HEADER = (
@@ -62,9 +64,9 @@ DEFAULT_PORT = 8000
 
 DEFAULT_SEED = 100_000
 
-DEFAULT_SPEED = "5"
+DEFAULT_SPEED = "slow"
 
-SPEEDS = {"1": 1.0, "5": 0.2, "20": 0.05, "instant": 0.0}
+SPEEDS = {"slow": 2.5, "1": 1.0, "5": 0.2, "20": 0.05, "instant": 0.0}
 
 MARKETS = ["normal", "hard"]
 
@@ -355,7 +357,59 @@ def make_policy(player: str, config: MarketConfig) -> Policy:
     return RandomPolicy()
 
 
-def game_meta(player: str, seed: int, market: str, config: MarketConfig) -> GameMeta:
+def game_preview(env: ThinBookPensionEnv, config: MarketConfig) -> GamePreview:
+    """
+    What to expect from the game the env has just drawn: its payouts and the character of its market,
+    counted over the trading days. For the viewer only; it reads the drawn game and changes nothing.
+    """
+
+    days = env.market[WARM_UP_DAYS:WARM_UP_DAYS + config["horizon_days"]]
+
+    no_trade_days = 0
+
+    dry_spell_days = 0
+
+    stormy_days = 0
+
+    big_buyer_days = 0
+
+    for day in days:
+        if day["small_caps_volume"] <= 0:
+            no_trade_days = no_trade_days + 1
+
+        if day["drought"]:
+            dry_spell_days = dry_spell_days + 1
+
+        if day["stormy"]:
+            stormy_days = stormy_days + 1
+
+        if day["big_buyer_offered"]:
+            big_buyer_days = big_buyer_days + 1
+
+    surprises = 0
+
+    total = 0.0
+
+    for payout in env.payouts:
+        total = total + payout["amount"]
+
+        if payout["kind"] != "scheduled_retirement":
+            surprises = surprises + 1
+
+    preview: GamePreview = {
+        "payouts": len(env.payouts),
+        "surprise_payouts": surprises,
+        "payout_total_naira": total,
+        "no_trade_days": no_trade_days,
+        "dry_spell_days": dry_spell_days,
+        "stormy_days": stormy_days,
+        "big_buyer_days": big_buyer_days,
+    }
+
+    return preview
+
+
+def game_meta(player: str, seed: int, market: str, config: MarketConfig, preview: GamePreview) -> GameMeta:
     meta: GameMeta = {
         "player": player,
         "player_label": PLAYERS[player]["label"],
@@ -370,6 +424,7 @@ def game_meta(player: str, seed: int, market: str, config: MarketConfig) -> Game
         "breach_grace_days": config["breach_grace_days"],
         "small_caps_median_volume": config["small_caps_median_volume"],
         "board_minimum_shares": config["board_minimum_shares"],
+        "preview": preview,
     }
 
     return meta
@@ -395,6 +450,8 @@ def play_episode(player: str, seed: int, market: str) -> EpisodeLog:
 
     final = session.start()
 
+    preview = game_preview(session.env, config)
+
     days = [day_message(final, config, 0.0, False)]
 
     while not session.finished:
@@ -403,7 +460,7 @@ def play_episode(player: str, seed: int, market: str) -> EpisodeLog:
         days.append(day_message(final, config, session.last_reward, session.finished))
 
     log: EpisodeLog = {
-        "meta": game_meta(player, seed, market, config),
+        "meta": game_meta(player, seed, market, config, preview),
         "days": days,
         "outcome": final["outcome"],
         "outcome_text": outcome_text(final, config),
@@ -546,11 +603,11 @@ async def game_socket(websocket: WebSocket) -> None:
 
     session = GameSession(make_policy(player, config), config, seed)
 
-    meta: MetaMessage = {"type": "meta", "meta": game_meta(player, seed, market, config)}
+    state = session.start()
+
+    meta: MetaMessage = {"type": "meta", "meta": game_meta(player, seed, market, config, game_preview(session.env, config))}
 
     await websocket.send_text(to_json_text(meta))
-
-    state = session.start()
 
     await websocket.send_text(to_json_text(day_message(state, config, 0.0, False)))
 

@@ -4,6 +4,8 @@ The fixed facts about one game that the browser needs before day 1 (limits, fund
 
 from typing import TypedDict
 
+from custom_types.game_preview import GamePreview
+
 
 class GameMeta(TypedDict):
     player: str
@@ -31,3 +33,5 @@ class GameMeta(TypedDict):
     small_caps_median_volume: float
 
     board_minimum_shares: float
+
+    preview: GamePreview

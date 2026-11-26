@@ -1,7 +1,7 @@
 """
 Watch an agent run the ThinBook Pension fund in the browser (three.js), with one line per day in this terminal.
 
-Starts the server, loads the best trained agent, opens the browser and plays a game at 5x speed.
+Starts the server, loads the best trained agent, opens the browser and plays a game slowly (2.5 seconds a day; --speed 1, 5, 20 or instant is faster).
 
 Run from the project root:
 
