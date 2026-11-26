@@ -1022,3 +1022,18 @@ body.detailed .simple-only {
 .bottom-strip {
   grid-template-rows: auto 1fr auto;
 }
+
+/* Server messages: shown under the story line, above the scene. */
+.notice {
+  top: 92px;
+  z-index: 5;
+  max-width: 560px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.notice-info {
+  background: #eef4fd;
+  color: #1f4f8f;
+  border-color: #c6d8f2;
+}

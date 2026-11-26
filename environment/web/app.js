@@ -61,10 +61,116 @@ function settingsKey() {
   return `${elements.player.value}|${elements.seed.value}|${elements.market.value}`;
 }
 
-function showNotice(text) {
+function showNotice(text, kind) {
   elements.notice.textContent = text;
 
+  elements.notice.className = kind === "info" ? "notice notice-info" : "notice";
+
   elements.notice.hidden = text === "";
+}
+
+// Waking a sleeping server. On Render's free plan the server sleeps after about 15 minutes without
+// visitors; a request then waits while it starts again (up to about a minute). Before a game starts, the
+// page asks /health; if there is no answer within a few seconds it says the server is waking up, keeps
+// asking, and starts the game once it answers.
+const HEALTH_TIMEOUT_MS = 5000;
+
+const WAKE_POLL_MS = 3000;
+
+const WAKE_LIMIT_MS = 90000;
+
+// Render only sleeps after about 15 minutes without visitors, so if the page heard from the server in the
+// last few minutes it is awake and the check is skipped.
+const RECENT_CONTACT_MS = 5 * 60 * 1000;
+
+let waking = false;
+
+let lastContact = 0;
+
+function heardFromServer() {
+  lastContact = Date.now();
+}
+
+function wait(milliseconds) {
+  return new Promise(function after(resolve) {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+async function serverAnswers() {
+  const controller = new AbortController();
+
+  const timer = setTimeout(function giveUp() {
+    controller.abort();
+  }, HEALTH_TIMEOUT_MS);
+
+  try {
+    const response = await fetch("/health", { cache: "no-store", signal: controller.signal });
+
+    return response.ok;
+  } catch (error) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function showWaking(seconds) {
+  const counter = seconds > 0 ? ` (${seconds}s so far)` : "";
+
+  showNotice(`The game server is waking up${counter}. Free hosting puts it to sleep when nobody has played for a while, so this can take up to a minute. The game will start by itself.`, "info");
+}
+
+async function wakeServer() {
+  if (await serverAnswers()) {
+    heardFromServer();
+
+    return true;
+  }
+
+  const started = Date.now();
+
+  showWaking(0);
+
+  while (Date.now() - started < WAKE_LIMIT_MS) {
+    await wait(WAKE_POLL_MS);
+
+    showWaking(Math.round((Date.now() - started) / 1000));
+
+    if (await serverAnswers()) {
+      heardFromServer();
+
+      showNotice("");
+
+      return true;
+    }
+  }
+
+  showNotice("The game server did not wake up. Please refresh the page in a minute and press Play again.");
+
+  return false;
+}
+
+async function startGame(options) {
+  if (Date.now() - lastContact < RECENT_CONTACT_MS) {
+    openGame(options);
+
+    return;
+  }
+
+  if (waking) {
+    return;
+  }
+
+  waking = true;
+
+  const awake = await wakeServer();
+
+  waking = false;
+
+  if (awake) {
+    openGame(options);
+  }
 }
 
 function friendlyName(entry) {
@@ -95,6 +201,8 @@ async function loadPlayers(preferred) {
   const response = await fetch("/models");
 
   const body = await response.json();
+
+  heardFromServer();
 
   elements.player.innerHTML = "";
 
@@ -159,7 +267,7 @@ function resetGameView() {
   drawCharts();
 }
 
-function startGame(options) {
+function openGame(options) {
   if (socket) {
     socket.onclose = null;
 
@@ -195,12 +303,20 @@ function startGame(options) {
     }));
   };
 
-  socket.onmessage = (event) => handleMessage(JSON.parse(event.data));
+  socket.onmessage = (event) => {
+    heardFromServer();
+
+    handleMessage(JSON.parse(event.data));
+  };
 
   socket.onclose = () => {
     gameRunning = false;
 
     updateButtons();
+
+    if (!gameFinished) {
+      showNotice("Lost the connection to the game server (it may have gone to sleep). Press Play to wake it and start again.", "info");
+    }
   };
 }
 
