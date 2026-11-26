@@ -4,6 +4,7 @@ from custom_types.act_request import ActRequest
 from custom_types.act_response import ActResponse
 from custom_types.asset_weights import AssetWeights
 from custom_types.bank_liquidity import BankLiquidity
+from custom_types.behaviour_summary import BehaviourSummary
 from custom_types.basket_statistics import BasketStatistics
 from custom_types.calibration import Calibration
 from custom_types.calibration_rules import CalibrationRules
@@ -14,6 +15,7 @@ from custom_types.episode_log import EpisodeLog
 from custom_types.episode_request import EpisodeRequest
 from custom_types.error_response import ErrorResponse
 from custom_types.game_meta import GameMeta
+from custom_types.game_preview import GamePreview
 from custom_types.game_result import GameResult
 from custom_types.health_response import HealthResponse
 from custom_types.json_state import JsonState
@@ -46,6 +48,7 @@ __all__ = [
     "AssetWeights",
     "BankLiquidity",
     "BasketStatistics",
+    "BehaviourSummary",
     "Calibration",
     "CalibrationRules",
     "DayMessage",
@@ -55,6 +58,7 @@ __all__ = [
     "EpisodeRequest",
     "ErrorResponse",
     "GameMeta",
+    "GamePreview",
     "GameResult",
     "HealthResponse",
     "JsonState",
