@@ -1,0 +1,5 @@
+Best DQN run: dqn_05, 500 held-out games, 30000 days, actions Wait, Sell T-bills, Sell bank shares, Sell small-cap shares, Call a big buyer
+Median gap between the best and second-best move: 0.0103 points
+Days with a gap under 0.05 points (₦500): 98.5%
+Days with a gap under 0.01 points (₦100): 48.8%
+Calls to a big buyer who was not offering: 9528 (19.1 a game), median gap on those days 0.0114 points
