@@ -339,6 +339,14 @@ export function plainOutcome(message, meta) {
   return withoutColons(text.replace("fire sale", "forced sale").replace("small caps", "small-company shares").replace("after the limit grace ran out", "because a rule was not fixed in time"));
 }
 
+// A share just over its limit would round to the limit itself ("35%, the limit is 35%"), so near the limit
+// it is shown with two decimals.
+function nearLimit(share, limit) {
+  const decimals = Math.abs(share - limit) < 0.005 ? 2 : 0;
+
+  return `${(share * 100).toFixed(decimals)}%`;
+}
+
 function storyFor(message, meta) {
   const state = message.state;
 
@@ -373,9 +381,11 @@ function storyFor(message, meta) {
   if (broken !== "") {
     const days = state.grace_days_left;
 
-    const what = broken === "small" ? `Too much of the fund is in small-company shares (${(state.weights.small_caps * 100).toFixed(0)}%, the limit is ${(meta.small_caps_max_share * 100).toFixed(0)}%)` : `Bank shares are outside their allowed range (${(state.weights.banks * 100).toFixed(0)}%)`;
+    const what = broken === "small" ? `Too much of the fund is in small-company shares (${nearLimit(state.weights.small_caps, meta.small_caps_max_share)}, the limit is ${(meta.small_caps_max_share * 100).toFixed(0)}%)` : `Bank shares are outside their allowed range (${(state.weights.banks * 100).toFixed(0)}%)`;
 
-    return days > 0 ? `${what}. The agent has ${plural(days, "day")} to fix it, or the game will force a sale.` : `${what}. Time is up - the game will force a sale.`;
+    const timeUp = broken === "small" ? "Time is up - the game will force a sale as soon as anyone trades small-company shares (on many days nobody does)." : "Time is up - the game will force a sale.";
+
+    return days > 0 ? `${what}. The agent has ${plural(days, "day")} to fix it, or the game will force a sale.` : `${what}. ${timeUp}`;
   }
 
   const sale = chosenSale(state);
