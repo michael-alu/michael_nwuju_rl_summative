@@ -345,7 +345,7 @@ function sinceStart(key, now, day) {
 
   const sign = change > 0 ? "+" : "−";
 
-  return `<em class="${change > 0 ? "since-up" : "since-down"}">${sign}${naira(Math.abs(change))} since day 1</em>`;
+  return `<em class="since">${sign}${naira(Math.abs(change))} since day 1</em>`;
 }
 
 function towerLabelText(key, amount, share, day) {

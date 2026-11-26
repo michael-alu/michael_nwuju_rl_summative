@@ -1183,3 +1183,9 @@ body.detailed .simple-only {
 .end-benchmark p.end-sub {
   margin-bottom: 4px;
 }
+
+/* Changes in holdings are the fund doing its job, so they stay neutral; only the budget verdict is coloured. */
+.end-holdings td.change { color: var(--text); font-weight: 600; }
+.tower-label em.since { color: var(--muted); }
+.end-holdings-note .budget-ok { color: var(--green); }
+.end-holdings-note .budget-over { color: var(--red); }

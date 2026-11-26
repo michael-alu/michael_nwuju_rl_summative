@@ -452,7 +452,7 @@ function showHoldingsChange(state, lost) {
 
     const row = document.createElement("tr");
 
-    row.innerHTML = `<td>${before[index].name}</td><td>${naira(before[index].value)}</td><td class="${change < -500 ? "change-down" : change > 500 ? "change-up" : ""}">${signedNaira(change)}</td><td>${naira(after[index].value)}</td>`;
+    row.innerHTML = `<td>${before[index].name}</td><td>${naira(before[index].value)}</td><td class="change">${signedNaira(change)}</td><td>${naira(after[index].value)}</td>`;
 
     body.appendChild(row);
   }
@@ -467,7 +467,13 @@ function showHoldingsChange(state, lost) {
 
   document.getElementById("end-day-label").textContent = `Day ${state.day}`;
 
-  document.getElementById("end-holdings-note").textContent = `Most of the change is the job itself - the fund paid ${naira(state.paid_out_naira)} to retirees. Selling cost ${naira(lost)} (exchange fees and price dips). Shares are valued at their starting prices, as on the towers.`;
+  const allowed = (meta.won_cost_bps / 10_000) * meta.fund_naira;
+
+  const under = allowed - lost;
+
+  const verdict = under >= 0 ? `<b class="budget-ok">${naira(under)} under budget</b>` : `<b class="budget-over">${naira(-under)} over budget</b>`;
+
+  document.getElementById("end-holdings-note").innerHTML = `The fund shrinks because it does its job: it paid <b>${naira(state.paid_out_naira)}</b> to retirees. The part that shows the agent's skill is selling: it spent <b>${naira(lost)}</b> on exchange fees and price dips, against a <b>${naira(allowed)}</b> selling budget - ${verdict}. Shares are valued at their starting prices, as on the towers.`;
 }
 
 // A yardstick on the same game: the fortune teller (the planner that sees the future), played by the server.
