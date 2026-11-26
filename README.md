@@ -71,6 +71,21 @@ What the screen shows:
 
 Controls (top bar): player, game number with "Random game", market, Play, Pause, Step one day, speed (Slow at 2.5 seconds a day, 1x, 5x, 20x, Instant), "Show details" and "?" for a plain-words guide to the game. Changing the player, game number or market (or pressing Random) starts that game straight away. The player menu uses plain names ("PPO agent (won 49%)", the share of test games it won). The trained agents are picked by `environment/model_registry.py` from the sweep (best held-out win rate per algorithm); until the sweep has a PPO run, PPO uses `models/pg/pension5_seed0_best.pt`, and algorithms with no finished run show "not trained yet". The page also takes options in its address: `?player=ppo&seed=100008&replay=1&pause_at=30` replays a game through `POST /episode` and stops on day 30 (that is how the screenshot above was taken).
 
+## Play it online
+
+The game is deployed on Render: **https://thinbook-pension.onrender.com** (no install needed; press Play). It runs on Render's free plan, which sleeps when nobody has visited for a while, so the first visit can take about a minute to wake up. If the tab has been left open long enough for the server to fall asleep, pressing Play says the game server is waking up (with a seconds counter), waits for it, and starts the game by itself; if the connection drops mid-game, the page says so and Play reconnects.
+
+To deploy your own copy: on render.com, choose New > Web Service, connect this GitHub repository, pick the Docker runtime (Render finds the `Dockerfile` in the root) and the Free instance type, and set the health check path to `/health`. Render builds the image and gives the service its address. Every push to the branch redeploys it.
+
+The `Dockerfile` installs the same package versions as `pyproject.toml`, with the CPU-only build of torch, copies the repository (the trained models, configs and results tables are all tracked) and starts `uvicorn environment.rendering:app` on the port Render provides. The server needs about 200 MB of memory. To try the image locally:
+
+```
+docker build -t thinbook .
+docker run -p 8000:8000 thinbook
+```
+
+then open http://127.0.0.1:8000.
+
 ## API
 
 The same server exposes the agents to other apps. Interactive docs: http://127.0.0.1:8000/docs (after `uv run play.py`).
