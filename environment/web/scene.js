@@ -320,12 +320,40 @@ export function setFund(amount) {
   fundNaira = amount;
 }
 
-function towerLabelText(key, amount, share) {
+// What the fund held on day 0, so each tower can show how much it has changed since the start.
+let startHoldings = null;
+
+export function setStartHoldings(state) {
+  startHoldings = {
+    cash: state.cash_naira + state.settling_naira,
+    tbills: state.tbills_naira,
+    banks: state.banks_naira_book,
+    small_caps: state.small_caps_naira_book,
+  };
+}
+
+function sinceStart(key, now, day) {
+  if (!startHoldings || day === 0) {
+    return "";
+  }
+
+  const change = now - startHoldings[key];
+
+  if (Math.abs(change) < 500) {
+    return "<em>no change since day 0</em>";
+  }
+
+  const sign = change > 0 ? "+" : "−";
+
+  return `<em class="${change > 0 ? "since-up" : "since-down"}">${sign}${naira(Math.abs(change))} since day 0</em>`;
+}
+
+function towerLabelText(key, amount, share, day) {
   const name = detailed ? TOWER_NAMES[key] : SIMPLE_NAMES[key];
 
   const shareLine = detailed ? `<em>${(share * 100).toFixed(0)}% of the fund</em>` : "";
 
-  return `<strong>${name}</strong><span>${naira(amount)}</span>${shareLine}`;
+  return `<strong>${name}</strong><span>${naira(amount)}</span>${sinceStart(key, amount, day)}${shareLine}`;
 }
 
 export function setDetailed(flag) {
@@ -354,6 +382,8 @@ export function sceneDay(message, meta, instant) {
 }
 
 export function resetScene() {
+  startHoldings = null;
+
   resetOffice();
 }
 
@@ -398,11 +428,11 @@ export function updateScene(state, meta, instant) {
 
   towers.small_caps.targetHeight = heightFor(state.small_caps_naira_book);
 
-  towers.tbills.label.element.innerHTML = towerLabelText("tbills", state.tbills_naira, state.weights.tbills);
+  towers.tbills.label.element.innerHTML = towerLabelText("tbills", state.tbills_naira, state.weights.tbills, state.day);
 
-  towers.banks.label.element.innerHTML = towerLabelText("banks", state.banks_naira_book, state.weights.banks);
+  towers.banks.label.element.innerHTML = towerLabelText("banks", state.banks_naira_book, state.weights.banks, state.day);
 
-  towers.small_caps.label.element.innerHTML = towerLabelText("small_caps", state.small_caps_naira_book, state.weights.small_caps);
+  towers.small_caps.label.element.innerHTML = towerLabelText("small_caps", state.small_caps_naira_book, state.weights.small_caps, state.day);
 
   cash.targetHeight = heightFor(state.cash_naira);
 
@@ -410,7 +440,7 @@ export function updateScene(state, meta, instant) {
 
   const arriving = state.settling_naira > 0 ? `<em>+${naira(state.settling_naira)} coming tomorrow</em>` : "";
 
-  cash.label.element.innerHTML = `<strong>Cash</strong><span>${naira(state.cash_naira)}</span>${arriving}`;
+  cash.label.element.innerHTML = `<strong>Cash</strong><span>${naira(state.cash_naira)}</span>${arriving}${sinceStart("cash", state.cash_naira + state.settling_naira, state.day)}`;
 
   banksBand.targetBottom = heightFor(meta.banks_min_share * bookValue);
 

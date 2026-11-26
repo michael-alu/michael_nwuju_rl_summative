@@ -214,6 +214,10 @@ function isDetailed() {
   return document.body.classList.contains("detailed");
 }
 
+function withArticle(word) {
+  return `${/^[aeiou]/i.test(word) ? "an" : "a"} ${word}`;
+}
+
 function plural(count, word) {
   return `${count} ${word}${count === 1 ? "" : "s"}`;
 }
@@ -313,7 +317,7 @@ function cashContext(state) {
 
   const enough = ready >= next.amount ? "There is enough cash ready." : `Only ${naira(ready)} cash is ready.`;
 
-  return `Next - a ${who} of ${naira(next.amount)} ${inDays(next.due_day - state.day)}. ${enough}`;
+  return `Next - ${withArticle(who)} of ${naira(next.amount)} ${inDays(next.due_day - state.day)}. ${enough}`;
 }
 
 // The server's own reason for the result, in plain words for the simple view (the reason is not changed).
@@ -373,7 +377,7 @@ function storyFor(message, meta) {
   const surprise = surprisePayout(state);
 
   if (surprise) {
-    return `Surprise - a ${(PAYOUT_LABELS[surprise.kind] || "payout").toLowerCase()} of ${naira(surprise.amount)} must be paid ${inDays(surprise.due_day - state.day)}. The agent needs cash ready.`;
+    return `Surprise - ${withArticle((PAYOUT_LABELS[surprise.kind] || "payout").toLowerCase())} of ${naira(surprise.amount)} must be paid ${inDays(surprise.due_day - state.day)}. The agent needs cash ready.`;
   }
 
   const broken = brokenRule(state, meta);

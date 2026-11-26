@@ -4,7 +4,7 @@
 // Page options (used by play.py and for screenshots):
 // ?player=ppo&seed=100000&market=normal&speed=5&autoplay=1&pause_at=30&detailed=1
 
-import { createScene, sceneDay, resetScene, resetView, setAutoOrbit, setFund, setDetailed } from "./scene.js";
+import { createScene, sceneDay, resetScene, resetView, setAutoOrbit, setFund, setDetailed, setStartHoldings } from "./scene.js";
 import { drawPriceChart, drawPointsChart } from "./charts.js";
 import { budgetPoints, naira, plainOutcome, resetPayouts, showPreview, updatePayouts, updateStatus } from "./panels.js";
 
@@ -35,6 +35,8 @@ let priceHistory = [];
 let pointsHistory = [];
 let lastMessage = null;
 let gameSettingsKey = "";
+
+let startState = null;
 
 const elements = {
   player: document.getElementById("player"),
@@ -334,6 +336,12 @@ function openGame(options) {
 function recordDay(message) {
   const state = message.state;
 
+  if (state.day === 0) {
+    startState = state;
+
+    setStartHoldings(state);
+  }
+
   let sold = false;
 
   let bigBuyer = false;
@@ -389,6 +397,69 @@ function showDay(message, instant) {
   drawCharts();
 }
 
+// The end screen's "Where the fund went": each holding on day 0 and at the end, valued like the towers
+// (shares at their starting prices, the way the limits are measured), and the change.
+function holdingsOf(state) {
+  return [
+    { name: "Cash", value: state.cash_naira + state.settling_naira },
+    { name: "Government bills", value: state.tbills_naira },
+    { name: "Bank shares", value: state.banks_naira_book },
+    { name: "Small-company shares", value: state.small_caps_naira_book },
+  ];
+}
+
+function signedNaira(amount) {
+  if (Math.abs(amount) < 500) {
+    return "no change";
+  }
+
+  return `${amount > 0 ? "+" : "−"}${naira(Math.abs(amount))}`;
+}
+
+function showHoldingsChange(state, lost) {
+  const body = document.getElementById("end-holdings");
+
+  body.innerHTML = "";
+
+  if (!startState) {
+    return;
+  }
+
+  const before = holdingsOf(startState);
+
+  const after = holdingsOf(state);
+
+  let totalBefore = 0;
+
+  let totalAfter = 0;
+
+  for (let index = 0; index < before.length; index++) {
+    totalBefore = totalBefore + before[index].value;
+
+    totalAfter = totalAfter + after[index].value;
+
+    const change = after[index].value - before[index].value;
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `<td>${before[index].name}</td><td>${naira(before[index].value)}</td><td>${naira(after[index].value)}</td><td class="${change < -500 ? "change-down" : change > 500 ? "change-up" : ""}">${signedNaira(change)}</td>`;
+
+    body.appendChild(row);
+  }
+
+  const total = document.createElement("tr");
+
+  total.className = "end-total";
+
+  total.innerHTML = `<td>Whole fund</td><td>${naira(totalBefore)}</td><td>${naira(totalAfter)}</td><td>${signedNaira(totalAfter - totalBefore)}</td>`;
+
+  body.appendChild(total);
+
+  document.getElementById("end-day-label").textContent = `Day ${state.day}`;
+
+  document.getElementById("end-holdings-note").textContent = `Over the game the fund paid ${naira(state.paid_out_naira)} to retirees and lost ${naira(lost)} when selling. Shares are valued at their starting prices, as on the towers.`;
+}
+
 function showEnd(message) {
   const state = message.state;
 
@@ -415,6 +486,8 @@ function showEnd(message) {
   document.getElementById("end-invalid").textContent = state.invalid_actions;
 
   document.getElementById("end-paid").textContent = naira(state.paid_out_naira);
+
+  showHoldingsChange(state, lost);
 
   elements.endOverlay.hidden = false;
 }

@@ -1088,3 +1088,54 @@ body.detailed .simple-only {
 .lost-banner button {
   flex: none;
 }
+
+/* Change since day 0, on the towers and on the end screen. */
+.tower-label em.since-down { color: var(--red); }
+.tower-label em.since-up { color: var(--green); }
+
+.end-sub {
+  margin: 4px 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.end-holdings {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.end-holdings th,
+.end-holdings td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+.end-holdings th:first-child,
+.end-holdings td:first-child {
+  text-align: left;
+}
+
+.end-holdings th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.end-holdings .change-down { color: var(--red); font-weight: 600; }
+.end-holdings .change-up { color: var(--green); font-weight: 600; }
+
+.end-holdings .end-total td {
+  border-bottom: 0;
+  font-weight: 700;
+}
+
+.end-holdings-note {
+  margin: 6px 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
