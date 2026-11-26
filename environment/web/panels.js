@@ -530,6 +530,14 @@ export function updateStatus(message, meta) {
 
   document.getElementById("points-total").textContent = (budgetPoints(meta) + state.total_points).toFixed(2);
 
+  document.getElementById("score-now").textContent = (budgetPoints(meta) + state.total_points).toFixed(2);
+
+  const today = document.getElementById("score-today");
+
+  today.textContent = state.day === 0 ? "" : `${reward > 0.005 ? "+" : reward < -0.005 ? "−" : ""}${Math.abs(reward).toFixed(2)} today`;
+
+  today.className = reward > 0.005 ? "score-today value-up" : reward < -0.005 ? "score-today value-down" : "score-today";
+
   document.getElementById("forced-count").textContent = state.forced_event_count;
 
   document.getElementById("invalid-count").textContent = state.invalid_actions;

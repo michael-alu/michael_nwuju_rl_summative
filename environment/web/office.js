@@ -245,7 +245,7 @@ export function createOffice(scene) {
 
   scoreboard = label("scoreboard");
 
-  scoreboard.position.set(OFFICE_X, 4.3, -2.6);
+  scoreboard.position.set(OFFICE_X, 4.85, -2.6);
 
   scene.add(scoreboard);
 
@@ -259,11 +259,11 @@ export function createOffice(scene) {
 
   rewardPop = label("reward-pop-anchor");
 
-  rewardPop.position.set(OFFICE_X + 1.9, 2.7, AGENT_Z + 0.6);
+  rewardPop.position.set(OFFICE_X + 2.4, 2.7, AGENT_Z + 0.6);
 
   scene.add(rewardPop);
 
-  setBudgetBoard(null, 0, 0);
+  setBudgetBoard(null, 0, 0, null, 0);
 }
 
 function angleTowards(x, z) {
@@ -304,7 +304,19 @@ function naira(amount) {
 
 // The simple view's scoreboard: the selling budget left (the win line minus the money lost when selling so
 // far) and what today used of it. Budget left above zero is the same test as the game's own cost rule.
-function setBudgetBoard(left, spentToday, day) {
+function signedPoints(value) {
+  if (value > 0.005) {
+    return `+${value.toFixed(2)}`;
+  }
+
+  if (value < -0.005) {
+    return `−${Math.abs(value).toFixed(2)}`;
+  }
+
+  return "0.00";
+}
+
+function setBudgetBoard(left, spentToday, day, score, reward) {
   const title = left === null ? "Budget left" : left >= 0 ? "Budget left" : "Over budget";
 
   const value = left === null ? "₦125K" : naira(Math.abs(left));
@@ -313,7 +325,9 @@ function setBudgetBoard(left, spentToday, day) {
 
   const change = spentToday > 0.5 ? `&#9660; ${naira(spentToday)} used today` : "&#9679; nothing used today";
 
-  scoreboard.element.innerHTML = `<span class="scoreboard-title">${title}</span><strong>${value}</strong><span class="scoreboard-change scoreboard-${direction}">${change}</span>`;
+  const scoreLine = score === null ? "Score 12.50" : `Score ${score.toFixed(2)} (${signedPoints(reward)} today)`;
+
+  scoreboard.element.innerHTML = `<span class="scoreboard-title">${title}</span><strong>${value}</strong><span class="scoreboard-change scoreboard-${direction}">${change}</span><span class="scoreboard-points">${scoreLine}</span>`;
 
   scoreboard.element.dataset.day = String(day);
 }
@@ -328,7 +342,7 @@ function spentToday(state) {
   return spent;
 }
 
-function popSpend(state, finished) {
+function popSpend(state, finished, reward) {
   const element = rewardPop.element;
 
   const spent = spentToday(state);
@@ -343,20 +357,20 @@ function popSpend(state, finished) {
 
   let text = spent > 0.5 ? `−${naira(spent)}` : "₦0";
 
-  let caption = spent > 0.5 ? "of the budget used" : "nothing used today";
+  let caption = `${signedPoints(reward)} points today`;
 
   let kind = spent > 0.5 ? "reward-down" : "reward-flat";
 
   if (state.invalid_action) {
     text = "Wasted move";
 
-    caption = "nothing happened";
+    caption = `nothing happened, ${signedPoints(reward)} point`;
 
     kind = "reward-down";
   }
 
   if (forced) {
-    caption = "forced sale";
+    caption = `forced sale, ${signedPoints(reward)} points`;
 
     kind = "reward-down";
   }
@@ -364,7 +378,7 @@ function popSpend(state, finished) {
   if (finished) {
     text = state.outcome === "won" ? "WON" : "LOST";
 
-    caption = "";
+    caption = `${signedPoints(reward)} points today`;
 
     kind = state.outcome === "won" ? "reward-up" : "reward-down";
   }
@@ -418,7 +432,7 @@ export function officeDay(message, targets, instant, meta) {
   if (isDetailed()) {
     setScoreboard(budgetPoints + state.total_points, change, state.day);
   } else {
-    setBudgetBoard(left, state.day === 0 ? 0 : spentToday(state), state.day);
+    setBudgetBoard(left, state.day === 0 ? 0 : spentToday(state), state.day, budgetPoints + state.total_points, change);
   }
 
   if (state.day === 0) {
@@ -482,7 +496,7 @@ export function officeDay(message, targets, instant, meta) {
   if (isDetailed()) {
     popReward(reward, rewardCaption(state, reward, message.finished));
   } else {
-    popSpend(state, message.finished);
+    popSpend(state, message.finished, reward);
   }
 }
 
@@ -504,7 +518,7 @@ export function resetOffice() {
   if (isDetailed()) {
     setScoreboard(0, 0, 0);
   } else {
-    setBudgetBoard(null, 0, 0);
+    setBudgetBoard(null, 0, 0, null, 0);
   }
 }
 
