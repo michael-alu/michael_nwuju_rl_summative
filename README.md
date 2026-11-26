@@ -157,3 +157,8 @@ How models are saved and loaded (the serialization path) is described at the top
 - `logs/sweep/`, `models/`: the 40 sweep runs (summaries, training curves, weights); `logs/history/`: saved outputs of the earlier design experiments
 - `report_tables/`, `figures/`: every table and figure in the report, generated from the logs
 
+
+## Future work
+
+- **Let the agent choose how much to sell.** Today each action sells a fixed amount (for example about N250K of bank shares), so the agent learns what to sell and when, but not how much. A hybrid action space would let it pick the action and an amount between 0 and 1 of a cap each day. PPO and A2C can do this with a second output head (a Beta distribution for the amount), and DQN would need its parameterised version, P-DQN. This was left out for lack of time, since it means retraining all 40 runs.
+- **Train on harder markets.** PPO wins 49.0% of normal-market games but 18.0% on the hard market, and it rarely wins when payouts reach 40% or more of the fund. Training on a mix of normal and hard markets is the next step.
