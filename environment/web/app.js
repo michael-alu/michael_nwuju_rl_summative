@@ -262,6 +262,8 @@ function resetGameView() {
 
   elements.endOverlay.hidden = true;
 
+  document.getElementById("lost-banner").hidden = true;
+
   showNotice("");
 
   drawCharts();
@@ -408,6 +410,46 @@ function showEnd(message) {
   elements.endOverlay.hidden = false;
 }
 
+// Once a forced sale happens the game is lost, but every game runs its full 60 days (the rules and every
+// result depend on that), so the page says so and offers to jump to the end.
+function firstForcedDay(state) {
+  if (state.forced_events.length === 0) {
+    return 0;
+  }
+
+  return Number(state.forced_events[0].split(":")[0].replace("day ", ""));
+}
+
+function showLostBanner(message) {
+  const banner = document.getElementById("lost-banner");
+
+  const lost = message.state.forced_event_count > 0 && !message.finished;
+
+  banner.hidden = !lost;
+
+  if (!lost) {
+    return;
+  }
+
+  document.getElementById("lost-text").textContent = `This game is lost - forced sale on day ${firstForcedDay(message.state)}. The agent keeps playing to day ${meta ? meta.horizon_days : 60}, because every game runs its full length.`;
+
+  document.getElementById("skip-end").hidden = !gameRunning;
+}
+
+function skipToEnd() {
+  setSpeed("instant");
+
+  if (paused) {
+    paused = false;
+
+    send({ type: "play" });
+  }
+
+  updateButtons();
+
+  document.getElementById("lost-banner").hidden = true;
+}
+
 function handleMessage(message) {
   if (message.type === "error") {
     showNotice(message.message);
@@ -437,6 +479,8 @@ function handleMessage(message) {
 
   if (!instant || message.finished || paused) {
     showDay(message, instant);
+
+    showLostBanner(message);
   }
 
   if (pauseAtDay > 0 && message.state.day === pauseAtDay) {
@@ -520,6 +564,8 @@ function connectControls() {
 
   elements.step.addEventListener("click", onStep);
 
+  document.getElementById("skip-end").addEventListener("click", skipToEnd);
+
   elements.randomGame.addEventListener("click", function onRandomClick() {
     randomSeed();
 
@@ -591,6 +637,8 @@ async function replayGame(pauseAt) {
   }
 
   showDay(lastMessage, true);
+
+  showLostBanner(lastMessage);
 
   if (lastMessage.finished) {
     showEnd(lastMessage);
