@@ -1,0 +1,15 @@
+.git
+.venv
+__pycache__
+*.pyc
+.mypy_cache
+.pytest_cache
+.DS_Store
+data
+archive
+notebooks
+*.docx
+docs/REPORT_DRAFT.md
+docs/UI_DESIGN_BRIEF.md
+logs/sweep/**/*_episodes.csv
+logs/sweep/**/*_console.log
