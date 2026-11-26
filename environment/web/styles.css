@@ -1139,3 +1139,47 @@ body.detailed .simple-only {
   color: var(--muted);
   font-size: 12px;
 }
+
+/* Rewind: step back through the days already played. */
+.review {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.review input[type="range"] {
+  flex: 1;
+  min-width: 60px;
+}
+
+.review button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.review-note {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fff6e6;
+  color: #7a5a00;
+  font-size: 12px;
+}
+
+.end-benchmark {
+  margin: 0 0 14px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #f3f6fa;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.end-benchmark p {
+  margin: 0;
+}
+
+.end-benchmark p.end-sub {
+  margin-bottom: 4px;
+}

@@ -340,12 +340,12 @@ function sinceStart(key, now, day) {
   const change = now - startHoldings[key];
 
   if (Math.abs(change) < 500) {
-    return "<em>no change since day 0</em>";
+    return "<em>no change since day 1</em>";
   }
 
   const sign = change > 0 ? "+" : "−";
 
-  return `<em class="${change > 0 ? "since-up" : "since-down"}">${sign}${naira(Math.abs(change))} since day 0</em>`;
+  return `<em class="${change > 0 ? "since-up" : "since-down"}">${sign}${naira(Math.abs(change))} since day 1</em>`;
 }
 
 function towerLabelText(key, amount, share, day) {

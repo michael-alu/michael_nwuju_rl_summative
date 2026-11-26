@@ -98,10 +98,11 @@
           </dl>
           <p class="end-sub">Where the fund went</p>
           <table class="end-holdings">
-            <thead><tr><th>Holding</th><th>Day 0</th><th id="end-day-label">Day 60</th><th>Change</th></tr></thead>
+            <thead><tr><th>Holding</th><th>Day 1</th><th>Change</th><th id="end-day-label">Day 60</th></tr></thead>
             <tbody id="end-holdings"></tbody>
           </table>
           <p id="end-holdings-note" class="end-holdings-note"></p>
+          <div id="end-benchmark" class="end-benchmark" hidden></div>
           <div class="end-buttons">
             <button id="play-again" class="button-main">Play again (same game)</button>
             <button id="new-game">New game</button>
@@ -115,6 +116,13 @@
         <span id="day-text" class="day-text">Day 0 of 60</span>
       </div>
       <div class="progress"><div id="day-bar" class="progress-fill"></div></div>
+      <div id="review" class="review" hidden>
+        <button id="day-back" title="Previous day (left arrow)">&#9664; Back</button>
+        <input id="day-slider" type="range" min="0" max="0" value="0" aria-label="Go to a day">
+        <button id="day-forward" title="Next day (right arrow)">Forward &#9654;</button>
+        <button id="day-latest" title="Back to the latest day">Latest</button>
+      </div>
+      <p id="review-note" class="review-note" hidden></p>
 
       <p id="player-label" class="player-line">Press Play to start a game</p>
 

@@ -38,6 +38,12 @@ let gameSettingsKey = "";
 
 let startState = null;
 
+// Every day received this game, so past days can be shown again. viewing is the day on screen, or -1 for
+// the latest one.
+let dayLog = [];
+
+let viewing = -1;
+
 const elements = {
   player: document.getElementById("player"),
   seed: document.getElementById("seed"),
@@ -255,6 +261,10 @@ function updateButtons() {
 }
 
 function resetGameView() {
+  dayLog = [];
+
+  viewing = -1;
+
   priceHistory = [];
 
   pointsHistory = [];
@@ -442,7 +452,7 @@ function showHoldingsChange(state, lost) {
 
     const row = document.createElement("tr");
 
-    row.innerHTML = `<td>${before[index].name}</td><td>${naira(before[index].value)}</td><td>${naira(after[index].value)}</td><td class="${change < -500 ? "change-down" : change > 500 ? "change-up" : ""}">${signedNaira(change)}</td>`;
+    row.innerHTML = `<td>${before[index].name}</td><td>${naira(before[index].value)}</td><td class="${change < -500 ? "change-down" : change > 500 ? "change-up" : ""}">${signedNaira(change)}</td><td>${naira(after[index].value)}</td>`;
 
     body.appendChild(row);
   }
@@ -451,13 +461,65 @@ function showHoldingsChange(state, lost) {
 
   total.className = "end-total";
 
-  total.innerHTML = `<td>Whole fund</td><td>${naira(totalBefore)}</td><td>${naira(totalAfter)}</td><td>${signedNaira(totalAfter - totalBefore)}</td>`;
+  total.innerHTML = `<td>Whole fund</td><td>${naira(totalBefore)}</td><td>${signedNaira(totalAfter - totalBefore)}</td><td>${naira(totalAfter)}</td>`;
 
   body.appendChild(total);
 
   document.getElementById("end-day-label").textContent = `Day ${state.day}`;
 
-  document.getElementById("end-holdings-note").textContent = `Over the game the fund paid ${naira(state.paid_out_naira)} to retirees and lost ${naira(lost)} when selling. Shares are valued at their starting prices, as on the towers.`;
+  document.getElementById("end-holdings-note").textContent = `Most of the change is the job itself - the fund paid ${naira(state.paid_out_naira)} to retirees. Selling cost ${naira(lost)} (exchange fees and price dips). Shares are valued at their starting prices, as on the towers.`;
+}
+
+// A yardstick on the same game: the fortune teller (the planner that sees the future), played by the server.
+// It is not always the best possible result, so the page only compares, it does not call it perfect.
+function fundTotal(state) {
+  return state.cash_naira + state.settling_naira + state.tbills_naira + state.banks_naira_book + state.small_caps_naira_book;
+}
+
+async function showBenchmark(state) {
+  const box = document.getElementById("end-benchmark");
+
+  box.hidden = true;
+
+  if (!meta || meta.player === "perfect_foresight") {
+    return;
+  }
+
+  try {
+    const response = await fetch("/episode", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ player: "perfect_foresight", seed: meta.seed, market: meta.market }),
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
+    const log = await response.json();
+
+    const teller = log.days[log.days.length - 1].state;
+
+    const allowed = (meta.won_cost_bps / 10_000) * meta.fund_naira;
+
+    const agentLeft = allowed - (state.cost_bps / 10_000) * meta.fund_naira;
+
+    const tellerLeft = allowed - (teller.cost_bps / 10_000) * meta.fund_naira;
+
+    const tellerResult = teller.outcome === "won" ? "won" : "lost";
+
+    let verdict = `The agent finished ${naira(tellerLeft - agentLeft)} of budget behind a player that sees the future.`;
+
+    if (agentLeft >= tellerLeft) {
+      verdict = "The agent did as well as or better than a player that sees the future.";
+    }
+
+    box.innerHTML = `<p class="end-sub">Compared with the fortune teller</p><p>On this same game, a player that can see the future ${tellerResult}, with <b>${naira(Math.max(tellerLeft, 0))}</b> of budget left and a fund of <b>${naira(fundTotal(teller))}</b> at the end (the agent: ${naira(Math.max(agentLeft, 0))} left, ${naira(fundTotal(state))}). ${verdict}</p>`;
+
+    box.hidden = false;
+  } catch (error) {
+    box.hidden = true;
+  }
 }
 
 function showEnd(message) {
@@ -488,6 +550,8 @@ function showEnd(message) {
   document.getElementById("end-paid").textContent = naira(state.paid_out_naira);
 
   showHoldingsChange(state, lost);
+
+  showBenchmark(state);
 
   elements.endOverlay.hidden = false;
 }
@@ -561,6 +625,8 @@ function handleMessage(message) {
 
   lastMessage = message;
 
+  dayLog.push(message);
+
   const instant = speed === "instant";
 
   if (!instant || message.finished || paused) {
@@ -582,10 +648,106 @@ function handleMessage(message) {
 
     showEnd(message);
   }
+
+  updateReview();
+}
+
+// Rewind: redraw the screen exactly as it was on an earlier day, rebuilding the charts and the payout queue
+// from day 0 up to that day. The game itself is not replayed; these are the days the server already sent.
+function rebuildUpTo(index) {
+  priceHistory = [];
+
+  pointsHistory = [];
+
+  resetPayouts();
+
+  for (let day = 0; day <= index; day++) {
+    recordDay(dayLog[day]);
+
+    updatePayouts(dayLog[day].state);
+  }
+}
+
+function showLoggedDay(index) {
+  const last = dayLog.length - 1;
+
+  const target = Math.min(Math.max(index, 0), last);
+
+  if (gameRunning && !paused && !gameFinished) {
+    onPause();
+  }
+
+  viewing = target === last ? -1 : target;
+
+  rebuildUpTo(target);
+
+  showDay(dayLog[target], true);
+
+  showLostBanner(dayLog[target]);
+
+  elements.endOverlay.hidden = true;
+
+  updateReview();
+}
+
+function updateReview() {
+  const review = document.getElementById("review");
+
+  const note = document.getElementById("review-note");
+
+  const canReview = dayLog.length > 1 && (paused || gameFinished || !gameRunning);
+
+  review.hidden = !canReview;
+
+  if (!canReview) {
+    note.hidden = true;
+
+    return;
+  }
+
+  const last = dayLog.length - 1;
+
+  const shown = viewing === -1 ? last : viewing;
+
+  const slider = document.getElementById("day-slider");
+
+  slider.max = String(last);
+
+  slider.value = String(shown);
+
+  document.getElementById("day-back").disabled = shown <= 0;
+
+  document.getElementById("day-forward").disabled = shown >= last;
+
+  document.getElementById("day-latest").disabled = viewing === -1;
+
+  note.hidden = viewing === -1;
+
+  note.textContent = `Looking back at day ${dayLog[shown].state.day}. The game has reached day ${dayLog[last].state.day}; press Latest or Play to return.`;
+}
+
+function stepBack() {
+  const last = dayLog.length - 1;
+
+  showLoggedDay((viewing === -1 ? last : viewing) - 1);
+}
+
+function stepForward() {
+  const last = dayLog.length - 1;
+
+  showLoggedDay((viewing === -1 ? last : viewing) + 1);
+}
+
+function showLatest() {
+  showLoggedDay(dayLog.length - 1);
 }
 
 function onPlay() {
   const settingsChanged = settingsKey() !== gameSettingsKey;
+
+  if (viewing !== -1 && dayLog.length > 0) {
+    showLatest();
+  }
 
   if (!gameRunning || gameFinished || settingsChanged) {
     startGame({ paused: false });
@@ -605,15 +767,21 @@ function onPause() {
 
   send({ type: "pause" });
 
-  if (lastMessage) {
+  if (lastMessage && viewing === -1) {
     showDay(lastMessage, true);
   }
 
   updateButtons();
+
+  updateReview();
 }
 
 function onStep() {
   const settingsChanged = settingsKey() !== gameSettingsKey;
+
+  if (viewing !== -1 && dayLog.length > 0) {
+    showLatest();
+  }
 
   if (!gameRunning || gameFinished || settingsChanged) {
     startGame({ paused: true });
@@ -651,6 +819,30 @@ function connectControls() {
   elements.step.addEventListener("click", onStep);
 
   document.getElementById("skip-end").addEventListener("click", skipToEnd);
+
+  document.getElementById("day-back").addEventListener("click", stepBack);
+
+  document.getElementById("day-forward").addEventListener("click", stepForward);
+
+  document.getElementById("day-latest").addEventListener("click", showLatest);
+
+  document.getElementById("day-slider").addEventListener("input", function onSlide(event) {
+    showLoggedDay(Number(event.target.value));
+  });
+
+  window.addEventListener("keydown", function onArrow(event) {
+    if (event.target.tagName === "INPUT" || event.target.tagName === "SELECT" || dayLog.length < 2) {
+      return;
+    }
+
+    if (event.key === "ArrowLeft") {
+      stepBack();
+    }
+
+    if (event.key === "ArrowRight" && (paused || gameFinished || !gameRunning)) {
+      stepForward();
+    }
+  });
 
   elements.randomGame.addEventListener("click", function onRandomClick() {
     randomSeed();
@@ -720,9 +912,13 @@ async function replayGame(pauseAt) {
     updatePayouts(log.days[index].state);
 
     lastMessage = log.days[index];
+
+    dayLog.push(log.days[index]);
   }
 
   showDay(lastMessage, true);
+
+  updateReview();
 
   showLostBanner(lastMessage);
 
