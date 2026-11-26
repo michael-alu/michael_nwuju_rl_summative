@@ -26,6 +26,9 @@ let speed = "slow";
 let gameRunning = false;
 
 let pauseAtDay = 0;
+
+// Skip to the end only speeds up the lost game; the speed chosen before it comes back for the next game.
+let speedBeforeSkip = "";
 let gameFinished = false;
 let paused = false;
 let priceHistory = [];
@@ -270,6 +273,12 @@ function resetGameView() {
 }
 
 function openGame(options) {
+  if (speedBeforeSkip !== "") {
+    setSpeed(speedBeforeSkip);
+
+    speedBeforeSkip = "";
+  }
+
   if (socket) {
     socket.onclose = null;
 
@@ -437,6 +446,10 @@ function showLostBanner(message) {
 }
 
 function skipToEnd() {
+  if (speedBeforeSkip === "" && speed !== "instant") {
+    speedBeforeSkip = speed;
+  }
+
   setSpeed("instant");
 
   if (paused) {
