@@ -23,6 +23,6 @@ logs/sweep/**/*_console.log
 # Report documents (the course template and the built report) stay local
 *.docx
 
-# Working notes kept local: the report draft (source of the .docx) and the UI design brief
-docs/REPORT_DRAFT.md
-docs/UI_DESIGN_BRIEF.md
+# Working notes kept local: the report draft, design notes and the demo script
+docs/
+DEMO_SCRIPT.md

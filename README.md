@@ -4,7 +4,7 @@ A reinforcement learning summative (ALU, BSc Software Engineering, ML track).
 
 The agent manages a N10m Nigerian pension fund for 60 trading days. Retirees collect their retirement money: scheduled retirements are known in advance, while early withdrawals (for example after a job loss) and death benefits paid to families arrive at short notice. The manager must pay every payout on time and keep the fund inside its PenCom-style investment limits (not the exact PenCom figures), while losing as little as possible to selling costs.
 
-Each day the manager picks one of 5 actions: wait, sell T-bills, sell bank shares, sell small-cap shares, or call a big buyer (a negotiated block deal for small caps, offered on some days). The game is frozen: see `docs/ENVIRONMENT.md` for the full specification and `docs/HISTORY.md` for how it was designed.
+Each day the manager picks one of 5 actions: wait, sell T-bills, sell bank shares, sell small-cap shares, or call a big buyer (a negotiated block deal for small caps, offered on some days). The game is frozen. Its rules are described in words at the top of `environment/custom_env.py`, and every setting is in `configs/market.yaml`.
 
 The fund holds T-bills, a big-banks basket and a small-caps basket. Small caps trade thinly on NGX: many days have no trades, the board price only moves on days with 100,000+ shares traded, sales are capped at 20% of the day's volume, and selling moves the price. Market settings are calibrated from NGX data where possible and listed with their sources in `configs/market.yaml` and `configs/calibration.yaml`.
 
@@ -134,7 +134,7 @@ curl -X POST http://127.0.0.1:8000/episode -H "content-type: application/json" \
 
 The browser game uses a WebSocket, `ws://127.0.0.1:8000/ws/game`: send `{"player": "ppo", "seed": 100000, "market": "normal", "speed": "5"}`, then receive one `meta` message and one `day` message per trading day; send `{"type": "pause"}`, `{"type": "play"}`, `{"type": "step"}` or `{"type": "speed", "speed": "20"}` at any time. One game per connection.
 
-How models are saved and loaded (the serialization path) is described in `docs/ENVIRONMENT.md` under Integration.
+How models are saved and loaded (the serialization path) is described at the top of `environment/model_registry.py`.
 
 ## Layout
 
@@ -154,7 +154,6 @@ How models are saved and loaded (the serialization path) is described in `docs/E
 - `notebooks/colab_sweep.ipynb`: run a slice of the sweep on Colab
 - `configs/`: frozen game settings, hard market, calibration summary, proposed sweep configs (`configs/sweeps/`)
 - `scripts/`: calibration, design checks, slice sizing, agent evaluation, agents-vs-baselines tables, figures, generalization test, determinism check
-- `docs/`: environment spec, assumptions, design history
-- `logs/sweep/`, `models/`: the 40 sweep runs (summaries, training curves, weights); `logs/history/`: the saved outputs `docs/HISTORY.md` cites
+- `logs/sweep/`, `models/`: the 40 sweep runs (summaries, training curves, weights); `logs/history/`: saved outputs of the earlier design experiments
 - `report_tables/`, `figures/`: every table and figure in the report, generated from the logs
 

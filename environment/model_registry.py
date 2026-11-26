@@ -10,7 +10,7 @@ Finds and loads the players the game and the API can use.
 Serialization path: a model is saved as torch.save(network.state_dict()). To rebuild it you need the
 network shape: 15 observation numbers in, two hidden layers of settings["hidden_size"] (from the run's
 summary), 5 action scores out (training/common.py make_network). Load with
-network.load_state_dict(torch.load(path)) and feed it the observation described in docs/ENVIRONMENT.md.
+network.load_state_dict(torch.load(path)) and feed it the 15 observation numbers listed in environment/custom_env.py (OBSERVATION_NAMES).
 """
 
 import csv

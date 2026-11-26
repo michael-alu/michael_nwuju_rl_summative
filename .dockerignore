@@ -9,7 +9,6 @@ data
 archive
 notebooks
 *.docx
-docs/REPORT_DRAFT.md
-docs/UI_DESIGN_BRIEF.md
+docs
 logs/sweep/**/*_episodes.csv
 logs/sweep/**/*_console.log
