@@ -30,6 +30,8 @@ const COLOURS = {
 
 const TOWER_NAMES = { tbills: "T-bills", banks: "Bank shares", small_caps: "Small-cap shares" };
 
+const SIMPLE_NAMES = { tbills: "Government bills", banks: "Bank shares", small_caps: "Small-company shares" };
+
 let renderer;
 let labelRenderer;
 let scene;
@@ -141,7 +143,7 @@ function makeBanksBand(x) {
 
   const label = makeLabel("limit-label limit-label-green");
 
-  label.element.textContent = "safe zone";
+  label.element.textContent = "allowed zone";
 
   scene.add(label);
 
@@ -161,7 +163,7 @@ function makeSmallCapsRing(x) {
 
   const label = makeLabel("limit-label limit-label-red");
 
-  label.element.textContent = "safe limit";
+  label.element.textContent = "max 35%";
 
   scene.add(label);
 
@@ -191,7 +193,7 @@ function makeBriefcase(x) {
 
   const label = makeLabel("buyer-label");
 
-  label.element.textContent = "Big buyer offering to buy small caps today";
+  label.element.textContent = "A big buyer is here today";
 
   label.visible = false;
 
@@ -318,7 +320,9 @@ export function setFund(amount) {
   fundNaira = amount;
 }
 
-function towerLabelText(name, amount, share) {
+function towerLabelText(key, amount, share) {
+  const name = detailed ? TOWER_NAMES[key] : SIMPLE_NAMES[key];
+
   const shareLine = detailed ? `<em>${(share * 100).toFixed(0)}% of the fund</em>` : "";
 
   return `<strong>${name}</strong><span>${naira(amount)}</span>${shareLine}`;
@@ -327,9 +331,9 @@ function towerLabelText(name, amount, share) {
 export function setDetailed(flag) {
   detailed = flag;
 
-  smallCapsRing.label.element.textContent = detailed ? "limit 35% of the fund" : "safe limit";
+  smallCapsRing.label.element.textContent = detailed ? "limit 35% of the fund" : "max 35%";
 
-  banksBand.label.element.textContent = detailed ? "allowed 35% to 70%" : "safe zone";
+  banksBand.label.element.textContent = detailed ? "allowed 35% to 70%" : "allowed zone";
 
   if (lastState) {
     updateScene(lastState, lastMeta, true);
@@ -346,7 +350,7 @@ export function sceneDay(message, meta, instant) {
     "Call a big buyer": { x: towers.small_caps.x, z: 0 },
   };
 
-  officeDay(message, targets, instant);
+  officeDay(message, targets, instant, meta);
 }
 
 export function resetScene() {
@@ -394,17 +398,17 @@ export function updateScene(state, meta, instant) {
 
   towers.small_caps.targetHeight = heightFor(state.small_caps_naira_book);
 
-  towers.tbills.label.element.innerHTML = towerLabelText(TOWER_NAMES.tbills, state.tbills_naira, state.weights.tbills);
+  towers.tbills.label.element.innerHTML = towerLabelText("tbills", state.tbills_naira, state.weights.tbills);
 
-  towers.banks.label.element.innerHTML = towerLabelText(TOWER_NAMES.banks, state.banks_naira_book, state.weights.banks);
+  towers.banks.label.element.innerHTML = towerLabelText("banks", state.banks_naira_book, state.weights.banks);
 
-  towers.small_caps.label.element.innerHTML = towerLabelText(TOWER_NAMES.small_caps, state.small_caps_naira_book, state.weights.small_caps);
+  towers.small_caps.label.element.innerHTML = towerLabelText("small_caps", state.small_caps_naira_book, state.weights.small_caps);
 
   cash.targetHeight = heightFor(state.cash_naira);
 
   cash.targetGhostHeight = state.settling_naira > 0 ? heightFor(state.settling_naira) : 0;
 
-  const arriving = state.settling_naira > 0 ? `<em>+${naira(state.settling_naira)} arriving tomorrow</em>` : "<em>nothing arriving tomorrow</em>";
+  const arriving = state.settling_naira > 0 ? `<em>+${naira(state.settling_naira)} coming tomorrow</em>` : "";
 
   cash.label.element.innerHTML = `<strong>Cash</strong><span>${naira(state.cash_naira)}</span>${arriving}`;
 
@@ -429,9 +433,9 @@ export function updateScene(state, meta, instant) {
   if (breached !== "") {
     const days = state.grace_days_left;
 
-    const what = detailed ? "Over the limit" : breached === "small_caps" ? "Too many small caps" : "Bank shares out of their zone";
+    const what = detailed ? "Over the limit" : breached === "small_caps" ? "Too many small-company shares" : "Bank shares outside their zone";
 
-    breachLabel.element.textContent = days > 0 ? `${what}: ${days} day${days === 1 ? "" : "s"} to fix` : `${what}: no time left`;
+    breachLabel.element.textContent = days > 0 ? `${what} - ${days} day${days === 1 ? "" : "s"} to fix it` : `${what} - no time left`;
 
     breachLabel.userData.tower = breached;
   }

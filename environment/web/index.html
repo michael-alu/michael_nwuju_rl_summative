@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ThinBook Pension: watch the agent</title>
+  <title>ThinBook Pension - watch the agent</title>
   <link rel="stylesheet" href="/static/styles.css">
   <script type="importmap">
     {
@@ -41,20 +41,28 @@
     </div>
 
     <div class="button-group" title="How fast the days go by">
+      <button class="speed" data-speed="slow" title="2.5 seconds a day">Slow</button>
       <button class="speed" data-speed="1">1x</button>
       <button class="speed" data-speed="5">5x</button>
       <button class="speed" data-speed="20">20x</button>
       <button class="speed" data-speed="instant">Instant</button>
     </div>
 
-    <label class="toggle details-toggle" title="Show the finance terms and exact numbers"><input id="show-details" type="checkbox"> Show details</label>
+    <button id="show-details" class="details-button" aria-pressed="false" title="Show the extra numbers, finance terms and what the agent cannot see">Show details</button>
 
     <button id="help" class="button-help" title="How the game works">?</button>
   </header>
 
   <main class="layout">
     <section class="panel left-panel">
-      <h2>Retirees waiting for their money</h2>
+      <div id="preview" class="preview" hidden>
+        <p class="preview-kicker">What to expect in this game</p>
+        <p id="preview-title" class="preview-title"></p>
+        <ul id="preview-list" class="preview-list"></ul>
+        <p class="preview-note">Only you can see this. The agent finds things out day by day.</p>
+      </div>
+
+      <h2>Retirees to pay</h2>
       <p id="payout-summary" class="muted">Nobody is waiting right now</p>
       <div id="payout-list" class="payout-list"></div>
     </section>
@@ -62,9 +70,12 @@
     <section class="scene-area">
       <div id="scene" class="scene"></div>
       <div class="scene-tools">
-        <span id="player-label" class="player-label">Press Play to start a game</span>
-        <button id="reset-view" class="button-light">Reset view</button>
-        <label class="toggle"><input id="auto-orbit" type="checkbox"> Slowly orbit</label>
+        <div id="story" class="story">
+          <span class="story-kicker">What's happening</span>
+          <span id="story-text" class="story-text">An agent looks after a ₦10 million pension fund for 60 days. Press Play to watch it.</span>
+        </div>
+        <button id="reset-view" class="button-light detail-only">Reset view</button>
+        <label class="toggle detail-only"><input id="auto-orbit" type="checkbox"> Slowly orbit</label>
       </div>
       <div id="notice" class="notice" hidden></div>
 
@@ -73,10 +84,11 @@
           <div id="end-title" class="end-title">WON</div>
           <p id="end-reason" class="end-reason"></p>
           <dl class="end-summary">
-            <div><dt>Total points</dt><dd id="end-points"></dd></div>
-            <div><dt>Selling cost</dt><dd id="end-cost"></dd></div>
+            <div><dt>Budget left</dt><dd id="end-budget"></dd></div>
+            <div><dt>Budget used</dt><dd id="end-cost"></dd></div>
+            <div><dt>Final score</dt><dd id="end-points"></dd></div>
             <div><dt>Forced sales</dt><dd id="end-forced"></dd></div>
-            <div><dt>Invalid actions</dt><dd id="end-invalid"></dd></div>
+            <div><dt>Wasted moves</dt><dd id="end-invalid"></dd></div>
             <div><dt>Paid to retirees</dt><dd id="end-paid"></dd></div>
           </dl>
           <div class="end-buttons">
@@ -93,29 +105,36 @@
       </div>
       <div class="progress"><div id="day-bar" class="progress-fill"></div></div>
 
-      <h3>Today</h3>
+      <p id="player-label" class="player-line">Press Play to start a game</p>
+
+      <h3>The agent's move today</h3>
       <p id="action-text" class="action">Waiting for a game</p>
 
-      <h3><span class="simple-only">Score</span><span class="detail-only">Points</span> <span class="info" title="1 point = ₦10,000 lost or saved compared with the fair price. Every sale costs a little, so the score usually goes down; the fewer points lost, the better. Winning adds 7 points at the end, losing takes 7 away.">i</span></h3>
-      <div class="points-row">
-        <div><span class="muted"><span class="simple-only">reward today</span><span class="detail-only">today</span></span><strong id="points-today">0.00</strong></div>
-        <div><span class="muted">total</span><strong id="points-total">0.00</strong></div>
-      </div>
-      <canvas id="points-chart" class="points-chart"></canvas>
-
-      <h3><span class="simple-only">Money lost to selling</span><span class="detail-only">Selling cost so far</span></h3>
+      <h3>Is the agent winning?</h3>
+      <p id="verdict" class="verdict verdict-good">Yes, so far</p>
+      <ul class="checks">
+        <li id="check-paid" class="check check-wait"><span class="check-mark"></span><span class="check-text"><b>Pay every retiree on time</b><span id="check-paid-text">Nobody due yet</span></span></li>
+        <li id="check-forced" class="check check-good"><span class="check-mark"></span><span class="check-text"><b>Never be forced to sell</b><span id="check-forced-text">None so far</span></span></li>
+        <li id="check-cost" class="check check-good"><span class="check-mark"></span><span class="check-text"><b>Stay within the <span id="cost-limit">₦125K</span> selling budget</b><span id="check-cost-text">₦125K left</span></span></li>
+      </ul>
       <div class="gauge">
         <div id="cost-fill" class="gauge-fill gauge-good"></div>
         <div id="cost-line" class="gauge-line"></div>
       </div>
-      <div class="gauge-labels"><span id="cost-text">₦0 lost</span><span id="cost-line-text">limit to win: ₦125K</span></div>
+      <p class="cost-note">Selling always costs a little (exchange fees, and the price dips when you sell), so the fund gets a selling budget. Each sale uses some of it. A skilled agent raises the cash it needs and still finishes with budget left.</p>
 
-      <div class="counts">
-        <div><span class="muted"><span class="simple-only">Fire sales (one means a loss)</span><span class="detail-only">Forced sales</span></span><strong id="forced-count">0</strong></div>
-        <div><span class="muted"><span class="simple-only">Mistakes (-1 point each)</span><span class="detail-only">Invalid actions</span></span><strong id="invalid-count">0</strong></div>
-      </div>
+      <div class="detail-only"><div class="gauge-labels"><span id="cost-bps">0.00% of the fund lost</span><span id="cost-line-text">limit 1.25%</span></div></div>
 
       <div class="detail-only">
+        <h3>Score <span class="info" title="The score starts at 12.5 points, the ₦125,000 selling budget (1 point = ₦10,000). It is 12.5 plus the game's total points, so it falls as money is lost when selling, and a wasted move costs 1 point. Winning adds 7 at the end, losing takes 7 away.">i</span></h3>
+        <div class="points-row">
+          <div><span class="muted">today</span><strong id="points-today">0.00</strong></div>
+          <div><span class="muted">score</span><strong id="points-total">12.50</strong></div>
+          <div><span class="muted">forced sales</span><strong id="forced-count">0</strong></div>
+          <div><span class="muted">invalid actions</span><strong id="invalid-count">0</strong></div>
+        </div>
+        <canvas id="points-chart" class="points-chart"></canvas>
+
         <h3>What the agent can see in the market</h3>
         <ul class="market-list">
           <li>Small-cap board price: <strong id="stale-text">updated today</strong></li>
@@ -123,7 +142,7 @@
           <li>Bank share prices: <strong id="swings-text">calm</strong></li>
         </ul>
 
-        <label class="toggle"><input id="show-hidden" type="checkbox"> Show hidden state</label>
+        <label class="toggle"><input id="show-hidden" type="checkbox"> Show what the agent cannot see</label>
         <ul class="market-list hidden-list">
           <li class="hidden-note">Hidden from the agent</li>
           <li>Market mood: <strong id="hidden-mood">calm</strong></li>
@@ -131,39 +150,38 @@
           <li>Real small-cap price: <strong id="hidden-real-price"></strong></li>
         </ul>
       </div>
-
-      <p class="simple-only simple-note">Win: pay every retiree, never be forced into a fire sale, and keep the money lost to selling under the line.</p>
     </section>
   </main>
 
   <footer class="bottom-strip">
+    <p class="chart-why"><b>Why this matters</b> - small-company shares sell at the real price (orange), but the exchange keeps showing the last traded price (blue) until enough shares trade. The agent can tell how long that price has been stuck, but never sees the real one.</p>
     <canvas id="price-chart" class="price-chart"></canvas>
     <div class="chart-legend detail-only">
-      <span><i class="swatch swatch-board"></i>Board price (what the agent sees): it only moves on a day when at least 100,000 shares trade</span>
+      <span><i class="swatch swatch-board"></i>Board price (what the agent sees) - it only moves on a day when at least 100,000 shares trade</span>
       <span><i class="swatch swatch-real"></i>Real price (hidden from the agent)</span>
       <span><i class="swatch swatch-gap"></i>The gap between them</span>
       <span><i class="dot dot-sale"></i>Agent sold small caps</span>
       <span><i class="dot dot-buyer"></i>Big buyer deal</span>
     </div>
     <div class="chart-legend simple-only">
-      <span><i class="swatch swatch-board"></i>Price the manager sees (it only updates on busy days)</span>
-      <span><i class="swatch swatch-real"></i>True price (the manager can't see it)</span>
-      <span><i class="swatch swatch-gap"></i>The gap</span>
-      <span><i class="dot dot-sale"></i>Manager sold small caps</span>
-      <span><i class="dot dot-buyer"></i>Big buyer deal</span>
+      <span><i class="swatch swatch-board"></i>Price the agent sees (it only changes on busy days)</span>
+      <span><i class="swatch swatch-real"></i>Real price (the agent cannot see it)</span>
+      <span><i class="swatch swatch-gap"></i>The difference</span>
+      <span><i class="dot dot-sale"></i>Agent sold</span>
     </div>
   </footer>
 
   <div id="help-overlay" class="help-overlay" hidden>
     <div class="help-card">
       <h2>How the game works</h2>
-      <p><strong>The story.</strong> An agent runs a Nigerian pension fund worth ₦10 million for 60 trading days. Retirees and families must be paid: some payouts are planned retirements known well in advance, others (early withdrawals and death benefits) arrive with only 2 or 3 days' notice.</p>
-      <p><strong>What the fund owns.</strong> Cash, government T-bills (easy to sell), shares in big banks (easy to sell, but the money arrives the next day) and shares in small companies, "small caps" (hard to sell: few people trade them, and selling a lot at once pushes the price down).</p>
-      <p><strong>The 5 actions, one per day.</strong> Wait. Sell some T-bills. Sell some bank shares. Sell some small-cap shares (at most 20% of what trades that day). Call a big buyer, who takes a large block of small caps at a discount, but only on days one is offering.</p>
-      <p><strong>The limits.</strong> Pension rules cap small caps at 35% of the fund (red ring) and keep bank shares between 35% and 70% (green band). Paying retirees shrinks the fund, so the small-cap share creeps up. If a limit is broken, the fund has 10 days to fix it; after that, or on day 60, shares are sold in a fire sale.</p>
-      <p><strong>The catch.</strong> The small-cap price on the board only updates on days when at least 100,000 shares trade, so it is often out of date. The chart at the bottom shows how far the board price can drift from the real price.</p>
-      <p><strong>Scoring.</strong> Every sale loses a little compared with the fair price (fees and pushing the price down). 1 point = ₦10,000 lost or saved. The towers are measured at starting prices, the same way the limits are.</p>
-      <p><strong>Winning.</strong> The fund wins if it never needs a fire sale and its total selling cost stays under 125 basis points (1.25% of the fund). Otherwise it loses.</p>
+      <p><strong>The job.</strong> An agent looks after a ₦10 million pension fund for 60 days. It must pay every retiree on time. Some retirements are known 5 to 15 days ahead; others, like early withdrawals and death benefits, give only 2 or 3 days' notice.</p>
+      <p><strong>What the fund owns.</strong> Cash, which pays retirees. Government bills, which sell instantly. Bank shares, which sell easily but the money arrives the next day. Small-company shares, which are hard to sell - few people trade them, and selling a lot pushes the price down.</p>
+      <p><strong>One move a day.</strong> Wait, sell some government bills, sell some bank shares, sell some small-company shares, or call a big buyer who takes a large chunk of small-company shares at once, but only on days one is around.</p>
+      <p><strong>Two rules.</strong> Small-company shares can be at most 35% of the fund (the red ring), and bank shares must stay between 35% and 70% (the green box). Paying retirees shrinks the fund, so these shares slowly grow as a share of it. A broken rule must be fixed within 10 days.</p>
+      <p><strong>Forced sales.</strong> If there is not enough cash on a payment day, or a broken rule is not fixed in time, the game sells for the agent at a bad price. One forced sale loses the game.</p>
+      <p><strong>Why it is hard.</strong> Small-company shares rarely trade, so their price on the exchange often stays the same for days while their real value moves. The agent only sees that price. The chart at the bottom shows both.</p>
+      <p><strong>The selling budget.</strong> Cash runs out, so the fund must sell things to pay retirees, and every sale costs a little - exchange fees, and the price dips when you sell a lot. So the fund gets a selling budget of ₦125,000 (1.25% of the fund), and each sale uses some of it. The office scoreboard shows how much is left.</p>
+      <p><strong>How to win.</strong> Pay every retiree on time, never be forced to sell, and finish with budget left.</p>
       <button id="help-close" class="button-main">Got it</button>
     </div>
   </div>

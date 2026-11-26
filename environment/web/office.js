@@ -36,9 +36,9 @@ const SCREEN_COLOURS = {
 
 const SPEECH = {
   Wait: "I'll wait today",
-  "Sell T-bills": "Selling T-bills",
+  "Sell T-bills": "Selling government bills",
   "Sell bank shares": "Selling bank shares",
-  "Sell small-cap shares": "Selling small-cap shares",
+  "Sell small-cap shares": "Selling small-company shares",
   "Call a big buyer": "Calling the big buyer!",
 };
 
@@ -263,7 +263,7 @@ export function createOffice(scene) {
 
   scene.add(rewardPop);
 
-  setScoreboard(0, 0, 0);
+  setBudgetBoard(null, 0, 0);
 }
 
 function angleTowards(x, z) {
@@ -278,6 +278,98 @@ function setScoreboard(total, change, day) {
   scoreboard.element.innerHTML = `<span class="scoreboard-title">Score</span><strong>${total.toFixed(2)}</strong><span class="scoreboard-change scoreboard-${direction}">${arrow} ${change >= 0 ? "+" : ""}${change.toFixed(2)}</span>`;
 
   scoreboard.element.dataset.day = String(day);
+}
+
+function isDetailed() {
+  return document.body.classList.contains("detailed");
+}
+
+function naira(amount) {
+  const size = Math.abs(amount);
+
+  if (size >= 999_500) {
+    return `₦${(amount / 1_000_000).toFixed(2)}M`;
+  }
+
+  if (size >= 9_995) {
+    return `₦${(amount / 1_000).toFixed(0)}K`;
+  }
+
+  if (size >= 999.5) {
+    return `₦${(amount / 1_000).toFixed(1)}K`;
+  }
+
+  return `₦${Math.round(amount)}`;
+}
+
+// The simple view's scoreboard: the selling budget left (the win line minus the money lost when selling so
+// far) and what today used of it. Budget left above zero is the same test as the game's own cost rule.
+function setBudgetBoard(left, spentToday, day) {
+  const title = left === null ? "Budget left" : left >= 0 ? "Budget left" : "Over budget";
+
+  const value = left === null ? "₦125K" : naira(Math.abs(left));
+
+  const direction = spentToday > 0.5 ? "down" : "flat";
+
+  const change = spentToday > 0.5 ? `&#9660; ${naira(spentToday)} used today` : "&#9679; nothing used today";
+
+  scoreboard.element.innerHTML = `<span class="scoreboard-title">${title}</span><strong>${value}</strong><span class="scoreboard-change scoreboard-${direction}">${change}</span>`;
+
+  scoreboard.element.dataset.day = String(day);
+}
+
+function spentToday(state) {
+  let spent = 0;
+
+  for (const trade of state.trades) {
+    spent = spent + trade.cost;
+  }
+
+  return spent;
+}
+
+function popSpend(state, finished) {
+  const element = rewardPop.element;
+
+  const spent = spentToday(state);
+
+  let forced = false;
+
+  for (const trade of state.trades) {
+    if (trade.reason.startsWith("forced")) {
+      forced = true;
+    }
+  }
+
+  let text = spent > 0.5 ? `−${naira(spent)}` : "₦0";
+
+  let caption = spent > 0.5 ? "of the budget used" : "nothing used today";
+
+  let kind = spent > 0.5 ? "reward-down" : "reward-flat";
+
+  if (state.invalid_action) {
+    text = "Wasted move";
+
+    caption = "nothing happened";
+
+    kind = "reward-down";
+  }
+
+  if (forced) {
+    caption = "forced sale";
+
+    kind = "reward-down";
+  }
+
+  if (finished) {
+    text = state.outcome === "won" ? "WON" : "LOST";
+
+    caption = "";
+
+    kind = state.outcome === "won" ? "reward-up" : "reward-down";
+  }
+
+  element.innerHTML = `<div class="reward-pop ${kind}"><strong>${text}</strong><span>${caption}</span></div>`;
 }
 
 function popReward(reward, caption) {
@@ -296,7 +388,7 @@ function rewardCaption(state, reward, finished) {
   }
 
   if (state.invalid_action) {
-    return "invalid action";
+    return "wasted move";
   }
 
   if (state.forced_event_count > 0 && state.trades.some((trade) => trade.reason.startsWith("forced"))) {
@@ -304,20 +396,30 @@ function rewardCaption(state, reward, finished) {
   }
 
   if (Math.abs(reward) <= 0.005) {
-    return "no cost today";
+    return "nothing lost today";
   }
 
-  return "cost of selling";
+  return "lost when selling";
 }
 
-export function officeDay(message, targets, instant) {
+export function officeDay(message, targets, instant, meta) {
   const state = message.state;
 
   const reward = message.reward;
 
   const change = state.day === 0 ? 0 : reward;
 
-  setScoreboard(state.total_points, change, state.day);
+  const allowed = (meta.won_cost_bps / 10_000) * meta.fund_naira;
+
+  const left = allowed - (state.cost_bps / 10_000) * meta.fund_naira;
+
+  const budgetPoints = allowed / 10_000;
+
+  if (isDetailed()) {
+    setScoreboard(budgetPoints + state.total_points, change, state.day);
+  } else {
+    setBudgetBoard(left, state.day === 0 ? 0 : spentToday(state), state.day);
+  }
 
   if (state.day === 0) {
     ending = "";
@@ -344,13 +446,13 @@ export function officeDay(message, targets, instant) {
   }
 
   if (state.invalid_action) {
-    words = name === "Call a big buyer" ? "Oops, no big buyer today" : "Oops, nothing left to sell";
+    words = name === "Call a big buyer" ? "No big buyer today. Wasted move." : "Nothing left to sell. Wasted move.";
 
     shakeLeft = SHAKE_SECONDS;
   }
 
   if (forced) {
-    words = "Forced sale!";
+    words = "Forced to sell!";
 
     alarmLeft = ACTION_SECONDS * 1.5;
   }
@@ -377,7 +479,11 @@ export function officeDay(message, targets, instant) {
 
   screen.material.emissive.set(SCREEN_COLOURS[name] || COLOURS.screenIdle);
 
-  popReward(reward, rewardCaption(state, reward, message.finished));
+  if (isDetailed()) {
+    popReward(reward, rewardCaption(state, reward, message.finished));
+  } else {
+    popSpend(state, message.finished);
+  }
 }
 
 export function resetOffice() {
@@ -395,7 +501,11 @@ export function resetOffice() {
 
   speech.visible = false;
 
-  setScoreboard(0, 0, 0);
+  if (isDetailed()) {
+    setScoreboard(0, 0, 0);
+  } else {
+    setBudgetBoard(null, 0, 0);
+  }
 }
 
 function approach(current, target, amount) {

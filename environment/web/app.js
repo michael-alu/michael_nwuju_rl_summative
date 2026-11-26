@@ -6,14 +6,26 @@
 
 import { createScene, sceneDay, resetScene, resetView, setAutoOrbit, setFund, setDetailed } from "./scene.js";
 import { drawPriceChart, drawPointsChart } from "./charts.js";
-import { naira, resetPayouts, updatePayouts, updateStatus } from "./panels.js";
+import { budgetPoints, naira, plainOutcome, resetPayouts, showPreview, updatePayouts, updateStatus } from "./panels.js";
 
-const SPEEDS = ["1", "5", "20", "instant"];
+const SPEEDS = ["slow", "1", "5", "20", "instant"];
+
+const FRIENDLY_NAMES = {
+  ppo: "PPO agent",
+  dqn: "DQN agent",
+  a2c: "A2C agent",
+  reinforce: "REINFORCE agent",
+  block_dealer: "Simple rule (no learning)",
+  perfect_foresight: "Fortune teller (sees the future)",
+  random: "Random moves",
+};
 
 let socket = null;
 let meta = null;
-let speed = "5";
+let speed = "slow";
 let gameRunning = false;
+
+let pauseAtDay = 0;
 let gameFinished = false;
 let paused = false;
 let priceHistory = [];
@@ -55,6 +67,30 @@ function showNotice(text) {
   elements.notice.hidden = text === "";
 }
 
+function friendlyName(entry) {
+  const name = FRIENDLY_NAMES[entry.player] || entry.label;
+
+  if (!entry.available) {
+    return `${name} (not trained yet)`;
+  }
+
+  if (entry.held_out_win_rate === null || entry.held_out_win_rate === undefined) {
+    return name;
+  }
+
+  return `${name} (won ${(entry.held_out_win_rate * 100).toFixed(0)}%)`;
+}
+
+function playerLine(meta) {
+  const name = FRIENDLY_NAMES[meta.player] || meta.player_label;
+
+  const match = meta.player_label.match(/wins ([0-9.]+%)/);
+
+  const record = match ? `, won ${match[1]} of test games` : "";
+
+  return `${name}${record} · game ${meta.seed}, ${meta.market} market`;
+}
+
 async function loadPlayers(preferred) {
   const response = await fetch("/models");
 
@@ -67,7 +103,7 @@ async function loadPlayers(preferred) {
 
     option.value = entry.player;
 
-    option.textContent = entry.label;
+    option.textContent = friendlyName(entry);
 
     option.disabled = !entry.available;
 
@@ -140,6 +176,8 @@ function startGame(options) {
 
   paused = options.paused;
 
+  pauseAtDay = options.pauseAt || 0;
+
   updateButtons();
 
   const protocol = location.protocol === "https:" ? "wss" : "ws";
@@ -185,7 +223,7 @@ function recordDay(message) {
 
   priceHistory.push({ day: state.day, board: state.small_caps_board_price, real: state.small_caps_real_price, sold, bigBuyer });
 
-  pointsHistory.push({ day: state.day, total: state.total_points, reward: state.day === 0 ? 0 : message.reward });
+  pointsHistory.push({ day: state.day, total: (meta ? budgetPoints(meta) : 0) + state.total_points, reward: state.day === 0 ? 0 : message.reward });
 }
 
 function drawCharts() {
@@ -199,7 +237,9 @@ function drawCharts() {
 function applyDetails(detailed) {
   document.body.classList.toggle("detailed", detailed);
 
-  elements.showDetails.checked = detailed;
+  elements.showDetails.textContent = detailed ? "Hide details" : "Show details";
+
+  elements.showDetails.setAttribute("aria-pressed", detailed ? "true" : "false");
 
   localStorage.setItem("thinbook-detailed", detailed ? "1" : "0");
 
@@ -207,6 +247,8 @@ function applyDetails(detailed) {
 
   if (lastMessage && meta) {
     updateStatus(lastMessage, meta);
+
+    showPreview(meta);
   }
 
   drawCharts();
@@ -229,11 +271,17 @@ function showEnd(message) {
 
   document.getElementById("end-title").className = won ? "end-title end-won" : "end-title end-lost";
 
-  document.getElementById("end-reason").textContent = message.outcome_text;
+  document.getElementById("end-reason").textContent = plainOutcome(message, meta);
 
-  document.getElementById("end-points").textContent = state.total_points.toFixed(2);
+  document.getElementById("end-points").textContent = (budgetPoints(meta) + state.total_points).toFixed(2);
 
-  document.getElementById("end-cost").textContent = `${state.cost_bps.toFixed(1)} bps`;
+  const lost = (state.cost_bps / 10_000) * meta.fund_naira;
+
+  const allowed = (meta.won_cost_bps / 10_000) * meta.fund_naira;
+
+  document.getElementById("end-budget").textContent = lost <= allowed ? naira(allowed - lost) : `over by ${naira(lost - allowed)}`;
+
+  document.getElementById("end-cost").textContent = naira(lost);
 
   document.getElementById("end-forced").textContent = state.forced_event_count;
 
@@ -256,7 +304,9 @@ function handleMessage(message) {
 
     setFund(meta.fund_naira);
 
-    elements.playerLabel.textContent = `${meta.player_label}, game ${meta.seed}, ${meta.market} market`;
+    elements.playerLabel.textContent = playerLine(meta);
+
+    showPreview(meta);
 
     return;
   }
@@ -273,7 +323,7 @@ function handleMessage(message) {
     showDay(message, instant);
   }
 
-  if (meta && message.state.day === Number(new URLSearchParams(location.search).get("pause_at"))) {
+  if (pauseAtDay > 0 && message.state.day === pauseAtDay) {
     paused = true;
 
     updateButtons();
@@ -334,6 +384,15 @@ function onStep() {
   updateButtons();
 }
 
+// Changing the player, game or market starts that game straight away, keeping the chosen speed.
+function restartWithNewSettings() {
+  if (settingsKey() === gameSettingsKey && gameRunning) {
+    return;
+  }
+
+  startGame({ paused: false });
+}
+
 function randomSeed() {
   elements.seed.value = String(Math.floor(Math.random() * 900_000) + 100_000);
 }
@@ -345,7 +404,17 @@ function connectControls() {
 
   elements.step.addEventListener("click", onStep);
 
-  elements.randomGame.addEventListener("click", randomSeed);
+  elements.randomGame.addEventListener("click", function onRandomClick() {
+    randomSeed();
+
+    restartWithNewSettings();
+  });
+
+  elements.player.addEventListener("change", restartWithNewSettings);
+
+  elements.market.addEventListener("change", restartWithNewSettings);
+
+  elements.seed.addEventListener("change", restartWithNewSettings);
 
   for (const button of document.querySelectorAll(".speed")) {
     button.addEventListener("click", () => setSpeed(button.dataset.speed));
@@ -361,7 +430,9 @@ function connectControls() {
 
   elements.showHidden.addEventListener("change", () => document.body.classList.toggle("show-hidden", elements.showHidden.checked));
 
-  elements.showDetails.addEventListener("change", () => applyDetails(elements.showDetails.checked));
+  elements.showDetails.addEventListener("click", function onDetailsClick() {
+    applyDetails(!document.body.classList.contains("detailed"));
+  });
 
   elements.playAgain.addEventListener("click", () => startGame({ paused: false }));
 
@@ -429,7 +500,7 @@ async function main() {
 
   const wantedSpeed = options.get("speed");
 
-  setSpeed(SPEEDS.includes(wantedSpeed) ? wantedSpeed : "5");
+  setSpeed(SPEEDS.includes(wantedSpeed) ? wantedSpeed : "slow");
 
   updateButtons();
 

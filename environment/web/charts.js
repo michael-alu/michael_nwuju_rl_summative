@@ -96,7 +96,7 @@ export function drawPriceChart(canvas, history, horizon, detailed) {
 
   context.textAlign = "left";
 
-  context.fillText(detailed ? "Small-cap share price" : "Small-company share price: what the manager sees and the truth", 12, 18);
+  context.fillText(detailed ? "Small-cap share price" : "Small-company share price - what the agent sees and the real price", 12, 18);
 
   if (history.length === 0) {
     return;
@@ -225,7 +225,7 @@ export function drawPriceChart(canvas, history, horizon, detailed) {
 
     const offset = context.textAlign === "right" ? -10 : 10;
 
-    context.fillText(detailed ? "The stale-price gap: what the board hides" : "The gap: what the manager can't see", x + offset, y + 4);
+    context.fillText(detailed ? "The stale-price gap - what the board hides" : "The difference the agent cannot see", x + offset, y + 4);
   }
 }
 

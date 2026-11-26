@@ -148,6 +148,21 @@ button.selected {
 
 .right-panel {
   border-left: 1px solid var(--line);
+  overflow-y: auto;
+}
+
+.cost-note {
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #f3f6fa;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.cost-note b {
+  color: var(--text);
 }
 
 h2 {
@@ -747,7 +762,8 @@ body.detailed .simple-only {
   padding: 5px 10px;
   font-size: 13px;
   font-weight: 700;
-  white-space: nowrap;
+  max-width: 170px;
+  text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
@@ -807,4 +823,202 @@ body.detailed .simple-only {
     transform: translateY(-40px) scale(1);
     opacity: 0;
   }
+}
+
+/* Plain-words layer: details button, the story line, and "is the agent winning?". */
+
+.details-button {
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  background: var(--panel);
+  font-weight: 600;
+}
+
+.details-button[aria-pressed="true"] {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 560px;
+  margin-right: auto;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.story-kicker {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.story-text {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.story-warn {
+  border-left-color: var(--amber);
+  background: rgba(255, 246, 230, 0.96);
+}
+
+.story-bad {
+  border-left-color: var(--red);
+  background: rgba(253, 236, 236, 0.96);
+}
+
+.player-line {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.verdict {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.verdict-good { color: var(--green); }
+.verdict-warn { color: var(--amber); }
+.verdict-bad { color: var(--red); }
+
+.checks {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.check-mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e8ecf1;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.check-good .check-mark { background: #e3f3e5; color: var(--green); }
+.check-good .check-mark::before { content: "\2713"; }
+.check-warn .check-mark { background: #fff1d9; color: var(--amber); }
+.check-warn .check-mark::before { content: "!"; }
+.check-bad .check-mark { background: #fbe1e1; color: var(--red); }
+.check-bad .check-mark::before { content: "\2715"; }
+.check-wait .check-mark::before { content: "\2013"; }
+
+.check-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.check-text > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.check-warn .check-text > span { color: #a86b0c; font-weight: 600; }
+.check-bad .check-text > span { color: var(--red); font-weight: 600; }
+
+.gauge-warn {
+  background: var(--amber);
+}
+
+/* Keep the top bar inside 1440px now that it has a Slow speed and longer player names. */
+.top-bar {
+  gap: 7px;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+#player {
+  max-width: 190px;
+}
+
+#seed {
+  width: 74px;
+}
+
+.end-summary {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* What to expect in this game, and why the bottom chart matters. */
+.preview {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #d8e2f0;
+  border-radius: 8px;
+  background: #f4f8fd;
+}
+
+.preview-kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.preview-title {
+  margin: 3px 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.preview-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.preview-list li + li {
+  margin-top: 3px;
+}
+
+.preview-note {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+}
+
+.chart-why {
+  margin: 0 0 2px;
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.chart-why b {
+  color: var(--text);
+}
+
+.bottom-strip {
+  grid-template-rows: auto 1fr auto;
 }
